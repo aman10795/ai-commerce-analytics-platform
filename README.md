@@ -30,7 +30,7 @@ Current MVP:
 
 ## Architecture
 
-
+```text
 PDF invoices
     ↓
 PDF text extraction
@@ -46,27 +46,29 @@ raw database layer
 dbt staging models
     ↓
 canonical analytics models
+```
+
 
 ## Key Design Principles
-Keep extraction flexible and platform-agnostic
-Do not hardcode platform-specific invoice formats
-Preserve raw evidence and confidence scores
-Store missing values as null
-Keep business rules and canonical modeling in dbt, not in the extraction prompt
-Use AI for semantic extraction and classification
-Use dbt for deterministic transformation, testing, and trusted analytics logic
+- Keep extraction flexible and platform-agnostic
+- Do not hardcode platform-specific invoice formats
+- Preserve raw evidence and confidence scores
+- Store missing values as null
+- Keep business rules and canonical modeling in dbt, not in the extraction prompt
+- Use AI for semantic extraction and classification
+- Use dbt for deterministic transformation, testing, and trusted analytics logic
 
 
 ## Next Planned Steps
-Batch process all invoices in the input folder
-Store JSON outputs in a raw database table
-Set up DuckDB as the local warehouse
-Add dbt project structure
-Build staging models:
-stg_documents
-stg_components
-stg_entities
-stg_tax_breakdown
-Add dbt tests
-Build canonical order-level models
-Add Docker and orchestration later
+- Batch process all invoices in the input folder
+- Store JSON outputs in a raw database table
+- Set up DuckDB as the local warehouse
+- Add dbt project structure
+- Build staging models:
+- - stg_documents
+- - stg_components
+- - stg_entities
+- - stg_tax_breakdown
+- Add dbt tests
+- Build canonical order-level models
+- Add Docker and orchestration later
