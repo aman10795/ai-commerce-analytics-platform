@@ -1,0 +1,22 @@
+# Environment variables
+.env
+
+# Python virtual environment
+venvwolt/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Mac system files
+.DS_Store
+
+# Generated extraction outputs
+outputs/
+
+# Local warehouse files
+warehouse/
+*.duckdb
+
+# Raw invoice PDFs
+data/invoices/*.pdf
