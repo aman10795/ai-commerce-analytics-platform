@@ -54,10 +54,10 @@ dbt staging models
 canonical analytics marts
     ↓
 semantic metrics / AI querying
+```
 
 
-
-
+---
 
 # Current Capabilities
 
@@ -73,7 +73,7 @@ semantic metrics / AI querying
 - Load raw extraction artifacts into DuckDB
 - Generate operational ingestion artifacts
 
-
+---
 
 # Planned Roadmap
 - Near-term roadmap
@@ -90,6 +90,9 @@ semantic metrics / AI querying
 - - Add semantic AI querying layer
 - - Add anomaly detection and forecasting
 
+
+---
+
 Technology Stack
 Technology
 OpenAI API
@@ -100,11 +103,10 @@ Python
 Airflow / Dagster (planned)
 Docker (planned)
 
+---
 
 # Additional Documentation
 
 Detailed architecture and ingestion design documentation:
 
 docs/architecture.md
-docs/warehouse_design.md
-docs/ingestion_strategy.md
