@@ -1,34 +1,40 @@
 # AI Commerce Analytics Platform
 
-An AI-native analytics engineering project for extracting, structuring, and modeling transaction documents from food delivery, grocery delivery, and quick-commerce platforms.
+An AI-native analytics engineering platform for ingesting, extracting, structuring, and modeling transaction documents from food delivery, grocery delivery, and quick-commerce ecosystems.
 
-## Project Goal
+The platform combines:
+- AI-powered semantic document extraction
+- warehouse-style analytics engineering
+- DuckDB ingestion architecture
+- dbt-ready transformation modeling
+- operational observability
+- lineage and replayability
 
-This project builds a small but scalable analytics platform that can ingest transaction documents such as invoices, receipts, order confirmations, and fee invoices.
+---
 
-The platform starts with PDF invoice extraction and will evolve into a warehouse-style analytics system using dbt.
+# Project Vision
 
-## Current Scope
+Traditional invoice extraction systems rely on:
+- rigid OCR templates
+- regex-heavy pipelines
+- provider-specific logic
 
-Current MVP:
+This platform instead uses:
+- AI-assisted semantic extraction
+- platform-agnostic ingestion
+- warehouse-driven canonicalization
+- layered analytics engineering architecture
 
-- Read invoice PDFs from a local folder
-- Extract transaction-specific text from PDFs
-- Remove noisy legal / terms-and-conditions sections
-- Use OpenAI API for structured document extraction
-- Classify transaction documents in a platform-agnostic way
-- Extract components such as:
-  - product items
-  - modifiers
-  - delivery fees
-  - service fees
-  - discounts
-  - tips
-  - deposits
-  - taxes
-- Store output as JSON files
+The goal is to build a scalable analytics platform capable of supporting:
+- transaction intelligence
+- spending analytics
+- pricing and fee analytics
+- semantic AI querying
+- future machine learning use cases
 
-## Architecture
+---
+
+# High-Level Architecture
 
 ```text
 PDF invoices
@@ -37,38 +43,68 @@ PDF text extraction
     ↓
 transaction text cleaning
     ↓
-OpenAI structured extraction
+AI semantic extraction
     ↓
-JSON outputs
+raw AI extraction artifacts
     ↓
-raw database layer
+DuckDB bronze ingestion layer
     ↓
 dbt staging models
     ↓
-canonical analytics models
-```
+canonical analytics marts
+    ↓
+semantic metrics / AI querying
 
 
-## Key Design Principles
-- Keep extraction flexible and platform-agnostic
-- Do not hardcode platform-specific invoice formats
-- Preserve raw evidence and confidence scores
-- Store missing values as null
-- Keep business rules and canonical modeling in dbt, not in the extraction prompt
-- Use AI for semantic extraction and classification
-- Use dbt for deterministic transformation, testing, and trusted analytics logic
 
 
-## Next Planned Steps
-- Batch process all invoices in the input folder
-- Store JSON outputs in a raw database table
-- Set up DuckDB as the local warehouse
-- Add dbt project structure
-- Build staging models:
-- - stg_documents
-- - stg_components
-- - stg_entities
-- - stg_tax_breakdown
-- Add dbt tests
-- Build canonical order-level models
-- Add Docker and orchestration later
+
+# Current Capabilities
+
+- Read invoice PDFs from ingestion folders
+- Extract transaction-specific text from PDFs
+- Remove noisy legal / terms-and-conditions sections
+- Use OpenAI APIs for semantic extraction
+- Dynamically classify transaction documents
+- Extract normalized transaction components
+- Persist raw AI extraction artifacts
+- Track ingestion lineage and metadata
+- Perform content-based idempotent ingestion
+- Load raw extraction artifacts into DuckDB
+- Generate operational ingestion artifacts
+
+
+
+# Planned Roadmap
+- Near-term roadmap
+- - Build dbt project structure
+- - Create normalized staging models
+- - Add dbt tests and source freshness checks
+- - Add schema validation contracts
+- - Add reconciliation checks
+- - uild canonical order-level marts
+- Mid-term roadmap
+- - Add orchestration layer
+- - Add Dockerized execution
+- - Add incremental warehouse ingestion
+- - Add semantic AI querying layer
+- - Add anomaly detection and forecasting
+
+Technology Stack
+Technology
+OpenAI API
+PyMuPDF
+DuckDB
+dbt
+Python
+Airflow / Dagster (planned)
+Docker (planned)
+
+
+# Additional Documentation
+
+Detailed architecture and ingestion design documentation:
+
+docs/architecture.md
+docs/warehouse_design.md
+docs/ingestion_strategy.md

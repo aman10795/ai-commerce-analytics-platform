@@ -1,22 +1,66 @@
+# =========================
 # Environment variables
+# =========================
 .env
 
-# Python virtual environment
+# =========================
+# Python virtual environments
+# =========================
+venv/
 venvwolt/
 
+# =========================
 # Python cache files
+# =========================
 __pycache__/
 *.pyc
 
-# Mac system files
+# =========================
+# Jupyter
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# macOS system files
+# =========================
 .DS_Store
 
-# Generated extraction outputs
-outputs/
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
 
-# Local warehouse files
-warehouse/
+# =========================
+# Generated operational artifacts
+# =========================
+artifacts/
+
+# =========================
+# DuckDB warehouse files
+# =========================
+data/warehouse/
 *.duckdb
+*.wal
 
-# Raw invoice PDFs
-data/invoices/*.pdf
+# =========================
+# Raw source invoice PDFs
+# =========================
+data/invoices/
+
+# =========================
+# Raw AI extraction artifacts
+# =========================
+data/raw_json/
+
+# =========================
+# dbt generated files
+# =========================
+dbt/target/
+dbt/logs/
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.log
