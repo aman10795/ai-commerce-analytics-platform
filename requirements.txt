@@ -5,3 +5,4 @@ sqlalchemy
 psycopg2-binary
 pymupdf
 duckdb
+dbt-duckdb

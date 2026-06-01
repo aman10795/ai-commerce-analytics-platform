@@ -54,16 +54,16 @@ def create_raw_tables(conn):
     conn.execute("""
         CREATE TABLE IF NOT EXISTS raw.raw_file_registry (
             pdf_hash VARCHAR PRIMARY KEY,
-            current_json_hash VARCHAR,
-            pdf_file_name VARCHAR,
-            pdf_path VARCHAR,
-            extraction_file_name VARCHAR,
-            extraction_file_path VARCHAR,
-            model_name VARCHAR,
-            prompt_path VARCHAR,
-            first_seen_at TIMESTAMP,
-            last_loaded_at TIMESTAMP,
-            load_count INTEGER
+            current_json_hash VARCHAR NOT NULL,
+            pdf_file_name VARCHAR NOT NULL,
+            pdf_path VARCHAR NOT NULL,
+            extraction_file_name VARCHAR NOT NULL, 
+            extraction_file_path VARCHAR NOT NULL,
+            model_name VARCHAR NOT NULL,
+            prompt_path VARCHAR NOT NULL,
+            first_seen_at TIMESTAMP NOT NULL,
+            last_loaded_at TIMESTAMP NOT NULL,
+            load_count INTEGER NOT NULL
         );
     """)
 
@@ -493,6 +493,7 @@ def main():
         json_files=json_files,
         run_log=run_log,
     )
+    
 
     log_path = LOAD_LOG_DIR / f"duckdb_load_run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     validation_path = VALIDATION_DIR / f"duckdb_load_validation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"

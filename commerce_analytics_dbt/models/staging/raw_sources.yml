@@ -1,0 +1,72 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    description: "Bronze/raw ingestion tables loaded from AI extraction artifacts."
+
+    tables:
+      - name: raw_document_extractions
+        description: "One row per extracted document, storing full raw AI JSON and lineage metadata."
+        columns:
+          - name: document_id
+            description: "Stable document identifier generated from source PDF hash."
+            tests:
+              - not_null
+              - unique
+
+          - name: pdf_hash
+            description: "SHA256 hash of the original source PDF."
+            tests:
+              - not_null
+              - unique
+
+          - name: json_hash
+            description: "SHA256 hash of the raw AI extraction JSON artifact."
+            tests:
+              - not_null
+
+          - name: raw_json
+            description: "Full raw AI extraction payload."
+            tests:
+              - not_null
+
+          - name: loaded_at
+            description: "Timestamp when the extraction artifact was loaded into DuckDB."
+            tests:
+              - not_null
+
+      - name: raw_file_registry
+        description: "Registry of source PDFs and extraction artifacts using PDF and JSON hashes."
+        columns:
+          - name: pdf_hash
+            tests:
+              - not_null
+              - unique
+
+          - name: current_json_hash
+            tests:
+              - not_null
+
+          - name: first_seen_at
+            tests:
+              - not_null
+
+          - name: last_loaded_at
+            tests:
+              - not_null
+
+      - name: raw_ingestion_log
+        description: "Operational ingestion log for DuckDB raw loading runs."
+        columns:
+          - name: run_id
+            tests:
+              - not_null
+
+          - name: ingestion_status
+            tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: ['inserted_new_document', 'skipped_unchanged', 'replaced_changed_extraction', 'failed']
+                      

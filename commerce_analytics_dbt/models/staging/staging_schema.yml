@@ -1,0 +1,129 @@
+version: 2
+
+models:
+  - name: stg_documents
+    description: "Flattened document-level Silver model from raw AI extraction JSON."
+    columns:
+      - name: document_id
+        tests:
+          - not_null
+          - unique
+
+      - name: pdf_hash
+        tests:
+          - not_null
+
+      - name: json_hash
+        tests:
+          - not_null
+
+      - name: document_type
+        tests:
+          - not_null
+
+      - name: merge_key
+        tests:
+          - not_null
+
+  - name: stg_components
+    description: "Flattened component-level Silver model. One row per extracted transaction component."
+    columns:
+      - name: document_id
+        tests:
+          - not_null
+
+      - name: component_index
+        tests:
+          - not_null
+
+      - name: component_type
+        tests:
+          - not_null
+
+      - name: component_name
+        tests:
+          - not_null
+
+      - name: gross_amount
+        tests:
+          - not_null
+
+      - name: extraction_confidence
+        tests:
+          - not_null
+
+  - name: stg_tax_breakdown
+    description: "Flattened tax/VAT breakdown model. One row per extracted tax line."
+    columns:
+      - name: document_id
+        tests:
+          - not_null
+
+      - name: tax_index
+        tests:
+          - not_null
+
+      - name: tax_type
+        tests:
+          - not_null
+
+      - name: tax_rate
+        tests:
+          - not_null
+
+      - name: tax_amount
+        tests:
+          - not_null
+
+  - name: stg_entities
+    description: "Flattened entity model. One row per extracted platform, seller, merchant, payer, or related entity."
+    columns:
+      - name: document_id
+        tests:
+          - not_null
+
+      - name: entity_index
+        tests:
+          - not_null
+
+      - name: entity_name
+        tests:
+          - not_null
+
+      - name: entity_type
+        tests:
+          - not_null
+
+  - name: stg_detected_fields
+    description: "Flattened raw detected fields model for schema discovery and extraction debugging."
+    columns:
+      - name: document_id
+        tests:
+          - not_null
+
+      - name: detected_field_index
+        tests:
+          - not_null
+
+      - name: field_label
+        tests:
+          - not_null
+
+      - name: field_value
+        tests:
+          - not_null
+
+  - name: stg_data_quality_issues
+    description: "Flattened data quality issue model. One row per detected missing, ambiguous, or parsing issue."
+    columns:
+      - name: document_id
+        tests:
+          - not_null
+
+      - name: issue_type
+        tests:
+          - not_null
+
+      - name: issue_value
+        tests:
+          - not_null

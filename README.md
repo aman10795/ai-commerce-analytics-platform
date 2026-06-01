@@ -93,15 +93,14 @@ semantic metrics / AI querying
 
 ---
 
-Technology Stack
-Technology
-OpenAI API
-PyMuPDF
-DuckDB
-dbt
-Python
-Airflow / Dagster (planned)
-Docker (planned)
+# Technology Stack
+- OpenAI API
+- PyMuPDF
+- DuckDB
+- dbt
+- Python
+- Airflow / Dagster (planned)
+- Docker (planned)
 
 ---
 
