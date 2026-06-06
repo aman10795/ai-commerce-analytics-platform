@@ -1,0 +1,86 @@
+version: 2
+
+models:
+  - name: int_food_delivery_orders
+    description: >
+      Intermediate food-delivery order model. Consolidates one or more
+      extracted source documents into a single interpreted food-delivery order.
+
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "source_document_count >= 1"
+    columns:
+      - name: food_delivery_order_key
+        description: "Business key used to group documents belonging to the same food-delivery order."
+        tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        description: "Order identifier extracted from source documents."
+
+      - name: source_platform
+        description: "Platform where the order originated, such as Wolt."
+
+      - name: source_document_count
+        description: "Number of source documents merged into this order."
+        tests:
+          - not_null
+
+      - name: items_total_amount
+        tests:
+          - not_null
+
+      - name: fees_total_amount
+        tests:
+          - not_null
+
+      - name: latest_loaded_at
+        tests:
+          - not_null
+
+  - name: int_food_delivery_components
+    description: >
+      Intermediate food-delivery component model. Adds food-delivery-specific
+      business interpretation to generic extracted transaction components.
+
+    columns:
+      - name: food_delivery_order_key
+        description: "Business key linking the component to a food-delivery order."
+        tests:
+          - not_null
+
+      - name: document_id
+        tests:
+          - not_null
+
+      - name: component_index
+        tests:
+          - not_null
+
+      - name: component_name
+        tests:
+          - not_null
+
+      - name: component_type
+        tests:
+          - not_null
+
+      - name: food_delivery_component_group
+        description: "Normalized business grouping of the extracted component."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['item', 'modifier', 'delivery_fee', 'service_fee', 'tip', 'discount', 'deposit', 'refund', 'tax', 'other_fee','unknown  ']
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - food_delivery_order_key
+              - document_id
+              - component_index   
+
+     
