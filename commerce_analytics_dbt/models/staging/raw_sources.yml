@@ -8,6 +8,17 @@ sources:
     tables:
       - name: raw_document_extractions
         description: "One row per extracted document, storing full raw AI JSON and lineage metadata."
+
+        freshness:
+          warn_after:
+            count: 30
+            period: day
+          error_after:
+            count: 90
+            period: day
+
+        loaded_at_field: loaded_at
+
         columns:
           - name: document_id
             description: "Stable document identifier generated from source PDF hash."
@@ -68,5 +79,8 @@ sources:
               - not_null
               - accepted_values:
                   arguments:
-                    values: ['inserted_new_document', 'skipped_unchanged', 'replaced_changed_extraction', 'failed']
-                      
+                    values:
+                      - inserted_new_document
+                      - skipped_unchanged
+                      - replaced_changed_extraction
+                      - failed
