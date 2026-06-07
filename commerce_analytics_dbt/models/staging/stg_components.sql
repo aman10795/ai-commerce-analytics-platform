@@ -13,7 +13,7 @@ flattened as (
         s.json_hash,
         s.raw_json->'transaction_identity'->>'order_id' as order_id,
         s.raw_json->'transaction_identity'->>'merge_key' as merge_key,
-
+        raw_json->'extraction_metadata'->>'source_platform' as source_platform,
         try_cast(c.key as integer) as component_index,
         c.value->>'component_name' as component_name,
         c.value->>'component_type' as component_type,
@@ -30,8 +30,8 @@ flattened as (
         c.value->>'parent_component' as parent_component,
         c.value->>'source_evidence' as source_evidence,
         try_cast(c.value->>'source_page' as integer) as source_page,
-        try_cast(c.value->>'extraction_confidence' as double) as extraction_confidence
-
+        try_cast(c.value->>'extraction_confidence' as double) as extraction_confidence,
+        loaded_at
     from source s,
     json_each(s.raw_json, '$.components') as c
 

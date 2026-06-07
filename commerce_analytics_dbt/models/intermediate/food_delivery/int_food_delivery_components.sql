@@ -34,7 +34,7 @@ with components as (
         merge_key,
 
         coalesce(merge_key, order_id) as food_delivery_order_key,
-
+        source_platform,
         component_index,
         component_name,
         component_type,
@@ -58,6 +58,12 @@ with components as (
 
     from {{ ref('stg_components') }}
 
+),
+max_loaddate as (
+
+    select document_id, max(loaded_at) as latest_loaded_at
+    from {{ ref('stg_components') }}
+    group by document_id
 ),
 
 classified as (
@@ -126,5 +132,6 @@ classified as (
 
 )
 
-select *
-from classified
+select c.*,m.latest_loaded_at
+from classified c
+left join max_loaddate m using (document_id)
