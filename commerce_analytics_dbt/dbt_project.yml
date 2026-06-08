@@ -43,3 +43,9 @@ models:
     marts:
       +schema: marts
       +materialized: table
+
+seeds:
+  commerce_analytics_dbt:
+    +schema: reference
+ 
+    

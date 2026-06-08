@@ -1,0 +1,7 @@
+address_id,source_address_id_hash,label_type,is_verified,city,country,postcode,location_type,address_version,valid_from,valid_to
+addr_001,source_addr_001,home,FALSE,Berlin,DEU,10715,apartment,1,2025-08-01,2026-01-31
+addr_002,source_addr_002,home,FALSE,Berlin,DEU,12161,apartment,1,2024-12-01,2025-07-31
+addr_003,source_addr_003,home,FALSE,Berlin,DEU,13353,apartment,1,2024-10-01,2024-11-30
+addr_004,source_addr_004,home,FALSE,Leipzig,DEU,4109,apartment,1,2023-04-01,2024-09-30
+addr_005,source_addr_005,home,FALSE,Berlin,DEU,10779,apartment,1,2026-02-01,2026-03-31
+addr_006,source_addr_006,home,FALSE,Berlin,DEU,13351,apartment,1,2026-04-01,
