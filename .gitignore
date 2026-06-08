@@ -64,3 +64,24 @@ dbt/logs/
 # =========================
 *.tmp
 *.log
+
+# dbt artifacts
+commerce_analytics_dbt/target/
+commerce_analytics_dbt/logs/
+
+# Airflow
+airflow/airflow.db
+airflow/logs/
+airflow/airflow.cfg
+airflow/webserver_config.py
+
+# dbt
+target/
+dbt_packages/
+
+# Python
+__pycache__/
+*.pyc
+
+# Airflow virtual environment
+venvairflow/
