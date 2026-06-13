@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "Daily date dimension used as the MetricFlow time spine."
+    time_spine:
+      standard_granularity_column: date_day
+    columns:
+      - name: date_day
+        description: "One row per calendar day."
+        granularity: day
+        tests:
+          - not_null
+          - unique

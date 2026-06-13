@@ -19,7 +19,7 @@
     One row per food-delivery order.
 */
 
-with documents as (
+with food_delivery_documents as (
 
     select
         document_id,
@@ -60,6 +60,11 @@ with documents as (
         deposit_total_amount,
         refund_total_amount,
         amount_paid,
+        contains_alcohol,
+        contains_grocery,
+        contains_restaurant_food,
+        contains_pharmacy,
+        contains_convenience_items,
 
         contains_food_or_product_items,
         contains_platform_fees,
@@ -78,19 +83,7 @@ with documents as (
 
 ),
 
-food_delivery_documents as (
 
-    select *
-    from documents
-
-    where
-        contains_food_or_product_items = true
-        or contains_platform_fees = true
-        or contains_delivery_charges = true
-        or contains_tips = true
-        or order_category in ('restaurant', 'food_delivery', 'grocery', 'quick_commerce')
-
-),
 
 orders as (
 
@@ -130,6 +123,11 @@ orders as (
         bool_or(contains_refunds) as contains_refunds,
         bool_or(contains_subscription_benefits) as contains_subscription_benefits,
         bool_or(contains_payment_information) as contains_payment_information,
+        bool_or(contains_alcohol) as contains_alcohol,
+        bool_or(contains_grocery) as contains_grocery,
+        bool_or(contains_restaurant_food) as contains_restaurant_food,
+        bool_or(contains_pharmacy) as contains_pharmacy,
+        bool_or(contains_convenience_items) as contains_convenience_items,
 
         count(*) as source_document_count,
         count(distinct document_id) as distinct_document_count,

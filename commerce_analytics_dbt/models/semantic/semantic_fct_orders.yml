@@ -1,0 +1,193 @@
+version: 2
+
+semantic_models:
+  - name: food_delivery_orders
+    description: "Semantic model for food delivery orders."
+    model: ref('fct_orders')
+
+    defaults:
+      agg_time_dimension: order_date
+
+    entities:
+      - name: order
+        type: primary
+        expr: order_key
+
+      - name: merchant
+        type: foreign
+        expr: merchant_key
+
+    dimensions:
+      - name: order_date
+        type: time
+        expr: order_timestamp
+        type_params:
+          time_granularity: day
+
+      - name: source_platform
+        type: categorical
+
+      - name: merchant_name
+        type: categorical
+
+      - name: currency
+        type: categorical
+
+      - name: country_or_market
+        type: categorical
+
+      - name: order_category
+        type: categorical
+
+      - name: contains_alcohol
+        type: categorical
+
+      - name: contains_grocery
+        type: categorical
+
+      - name: contains_restaurant_food
+        type: categorical
+
+      - name: contains_pharmacy
+        type: categorical
+
+      - name: contains_convenience_items
+        type: categorical
+
+      - name: payment_method
+        type: categorical
+
+      - name: order_type
+        type: categorical
+
+      - name: week_of_month
+        type: categorical
+
+      - name: day_of_week
+        type: categorical
+
+      - name: hour_of_day
+        type: categorical
+
+      - name: residence_city
+        type: categorical
+
+      - name: career_stage
+        type: categorical
+
+    measures:
+      - name: order_count
+        agg: count_distinct
+        expr: order_key
+
+      - name: total_spend_measure
+        agg: sum
+        expr: calculated_order_total_amount
+
+      - name: items_total_measure
+        agg: sum
+        expr: items_total_amount
+
+      - name: fees_total_measure
+        agg: sum
+        expr: fees_total_amount
+
+      - name: delivery_total_measure
+        agg: sum
+        expr: delivery_total_amount
+
+      - name: tip_total_measure
+        agg: sum
+        expr: tip_total_amount
+
+      - name: discount_total_measure
+        agg: sum
+        expr: discount_total_amount
+
+      - name: refund_total_measure
+        agg: sum
+        expr: refund_total_amount
+
+metrics:
+  - name: order_count
+    label: "Order Count"
+    type: simple
+    type_params:
+      measure: order_count
+
+  - name: total_spend
+    label: "Total Spend"
+    type: simple
+    type_params:
+      measure: total_spend_measure
+
+  - name: items_total
+    label: "Items Total"
+    type: simple
+    type_params:
+      measure: items_total_measure
+
+  - name: fees_total
+    label: "Fees Total"
+    type: simple
+    type_params:
+      measure: fees_total_measure
+
+  - name: delivery_total
+    label: "Delivery Total"
+    type: simple
+    type_params:
+      measure: delivery_total_measure
+
+  - name: tip_total
+    label: "Tip Total"
+    type: simple
+    type_params:
+      measure: tip_total_measure
+
+  - name: discount_total
+    label: "Discount Total"
+    type: simple
+    type_params:
+      measure: discount_total_measure
+
+  - name: refund_total
+    label: "Refund Total"
+    type: simple
+    type_params:
+      measure: refund_total_measure
+
+  - name: average_order_value
+    label: "Average Order Value"
+    type: ratio
+    type_params:
+      numerator: total_spend
+      denominator: order_count
+
+  - name: delivery_fee_ratio
+    label: "Delivery Fee Ratio"
+    type: ratio
+    type_params:
+      numerator: delivery_total
+      denominator: total_spend
+
+  - name: tip_ratio
+    label: "Tip Ratio"
+    type: ratio
+    type_params:
+      numerator: tip_total
+      denominator: total_spend
+
+  - name: discount_ratio
+    label: "Discount Ratio"
+    type: ratio
+    type_params:
+      numerator: discount_total
+      denominator: total_spend
+
+  - name: refund_ratio
+    label: "Refund Ratio"
+    type: ratio
+    type_params:
+      numerator: refund_total
+      denominator: total_spend

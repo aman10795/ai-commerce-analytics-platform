@@ -41,6 +41,21 @@ select
     tax_total_amount,
     deposit_total_amount,
     refund_total_amount,
+    contains_food_or_product_items,
+        contains_platform_fees,
+        contains_delivery_charges,
+        contains_tips,
+        contains_discounts,
+        contains_taxes,
+        contains_deposits,
+        contains_refunds,
+        contains_subscription_benefits,
+        contains_payment_information,
+        contains_alcohol,
+        contains_grocery,
+        contains_restaurant_food,
+        contains_pharmacy,
+        contains_convenience_items,
 
     (
         items_total_amount
@@ -56,7 +71,8 @@ select
     source_document_count,
     latest_loaded_at
 
-from {{ ref('int_food_delivery_orders') }}
+from {{ ref('int_food_delivery_orders') }} 
+
 {% if is_incremental() %}
 
         where latest_loaded_at > (
@@ -68,4 +84,33 @@ from {{ ref('int_food_delivery_orders') }}
 
 )
 
-Select * from orders
+Select o.*,
+-- time context
+cast(o.order_timestamp as date) as order_date,
+d.year,
+d.month,
+d.week_of_year,
+d.week_of_month,
+d.day_of_month,
+
+-- residence context
+a.address_id as residence_address_id,
+a.city as residence_city,
+a.postcode as residence_postcode,
+
+-- career context
+c.career_stage
+
+ from orders o
+left join {{ ref('dim_date') }} d
+    on cast(o.order_timestamp as date) = d.date_day
+
+left join {{ ref('wolt_addresses') }} a
+    on cast(o.order_timestamp as date)
+       between cast(a.valid_from as date)
+       and coalesce(cast(a.valid_to as date), date '9999-12-31')
+
+left join {{ ref('career_trajectory') }} c
+    on cast(o.order_timestamp as date)
+       between cast(c.valid_from as date)
+       and coalesce(cast(c.valid_to as date), date '9999-12-31')

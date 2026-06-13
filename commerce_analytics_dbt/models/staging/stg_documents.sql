@@ -60,6 +60,11 @@ select
     try_cast(raw_json->'amount_summary'->>'deposit_total_amount' as double) as deposit_total_amount,
     try_cast(raw_json->'amount_summary'->>'refund_total_amount' as double) as refund_total_amount,
     try_cast(raw_json->'amount_summary'->>'amount_paid' as double) as amount_paid,
+    cast(raw_json->'order_classification'->>'contains_alcohol' as boolean) as contains_alcohol,
+    cast(raw_json->'order_classification'->>'contains_grocery' as boolean) as contains_grocery,
+    cast(raw_json->'order_classification'->>'contains_restaurant_food' as boolean) as contains_restaurant_food,
+    cast(raw_json->'order_classification'->>'contains_pharmacy' as boolean) as contains_pharmacy,
+    cast(raw_json->'order_classification'->>'contains_convenience_items' as boolean) as contains_convenience_items,
 
     try_cast(raw_json->'document_content_flags'->>'contains_food_or_product_items' as boolean) as contains_food_or_product_items,
     try_cast(raw_json->'document_content_flags'->>'contains_platform_fees' as boolean) as contains_platform_fees,
