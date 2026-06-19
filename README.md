@@ -1,111 +1,148 @@
 # AI Commerce Analytics Platform
 
-An AI-native analytics engineering platform for ingesting, extracting, structuring, and modeling transaction documents from food delivery, grocery delivery, and quick-commerce ecosystems.
+An end-to-end analytics engineering and AI project that transforms raw food-delivery invoices and transaction data into a semantic analytics platform with natural language querying.
 
-The platform combines:
-- AI-powered semantic document extraction
-- warehouse-style analytics engineering
-- DuckDB ingestion architecture
-- dbt-ready transformation modeling
-- operational observability
-- lineage and replayability
+## Project Overview
 
----
+This project demonstrates a modern analytics stack combining:
 
-# Project Vision
+* Python data extraction and transformation
+* DuckDB warehouse
+* dbt data modeling
+* SCD Type 2 historical tracking
+* Airflow orchestration
+* dbt Semantic Layer + MetricFlow
+* AI-powered analytics assistant
+* Streamlit user interface
 
-Traditional invoice extraction systems rely on:
-- rigid OCR templates
-- regex-heavy pipelines
-- provider-specific logic
+The goal is to allow users to ask business questions in natural language and receive governed answers directly from a semantic layer rather than generated SQL.
 
-This platform instead uses:
-- AI-assisted semantic extraction
-- platform-agnostic ingestion
-- warehouse-driven canonicalization
-- layered analytics engineering architecture
+Example:
 
-The goal is to build a scalable analytics platform capable of supporting:
-- transaction intelligence
-- spending analytics
-- pricing and fee analytics
-- semantic AI querying
-- future machine learning use cases
+**User Question**
 
----
+> How many orders did I have in Berlin with alcohol?
 
-# High-Level Architecture
+**AI Query Plan**
 
-```text
-PDF invoices
-    ↓
-PDF text extraction
-    ↓
-transaction text cleaning
-    ↓
-AI semantic extraction
-    ↓
-raw AI extraction artifacts
-    ↓
-DuckDB bronze ingestion layer
-    ↓
-dbt staging models
-    ↓
-canonical analytics marts
-    ↓
-semantic metrics / AI querying
+```json
+{
+  "metrics": ["order_count"],
+  "filters": [
+    {
+      "dimension": "order__residence_city",
+      "value": "Berlin"
+    },
+    {
+      "dimension": "order__contains_alcohol",
+      "value": true
+    }
+  ]
+}
 ```
 
+The AI converts the question into approved metrics and dimensions, executes the query through MetricFlow, and returns a business-friendly explanation.
 
 ---
 
-# Current Capabilities
+## Architecture
 
-- Read invoice PDFs from ingestion folders
-- Extract transaction-specific text from PDFs
-- Remove noisy legal / terms-and-conditions sections
-- Use OpenAI APIs for semantic extraction
-- Dynamically classify transaction documents
-- Extract normalized transaction components
-- Persist raw AI extraction artifacts
-- Track ingestion lineage and metadata
-- Perform content-based idempotent ingestion
-- Load raw extraction artifacts into DuckDB
-- Generate operational ingestion artifacts
-
----
-
-# Planned Roadmap
-- Near-term roadmap
-- - Build dbt project structure
-- - Create normalized staging models
-- - Add dbt tests and source freshness checks
-- - Add schema validation contracts
-- - Add reconciliation checks
-- - uild canonical order-level marts
-- Mid-term roadmap
-- - Add orchestration layer
-- - Add Dockerized execution
-- - Add incremental warehouse ingestion
-- - Add semantic AI querying layer
-- - Add anomaly detection and forecasting
-
+Raw Documents (PDFs / JSON / CSV)
+↓
+Python Extraction Layer
+↓
+DuckDB Warehouse
+↓
+dbt Bronze → Silver → Gold Models
+↓
+Snapshots (SCD Type 2)
+↓
+Semantic Layer (MetricFlow)
+↓
+AI Query Planner
+↓
+MetricFlow Execution
+↓
+Natural Language Answers
 
 ---
 
-# Technology Stack
-- OpenAI API
-- PyMuPDF
-- DuckDB
-- dbt
-- Python
-- Airflow / Dagster (planned)
-- Docker (planned)
+## Key Features
+
+### Data Engineering
+
+* Multi-source ingestion
+* DuckDB warehouse
+* Incremental dbt models
+* Data quality tests
+* Historical snapshots
+
+### Analytics Engineering
+
+* Fact and dimension modeling
+* Semantic metrics
+* MetricFlow governed queries
+* Time-based and behavioral analytics
+
+### AI Analytics Assistant
+
+* Natural language querying
+* Query decomposition
+* Semantic query planning
+* Dynamic dimension value discovery
+* Fuzzy matching and value normalization
+* AI-generated business explanations
+
+### Orchestration
+
+* Airflow DAG
+* Automated ingestion
+* Automated dbt runs
 
 ---
 
-# Additional Documentation
+## Example Business Questions
 
-Detailed architecture and ingestion design documentation:
+* How many orders did I have in Berlin with alcohol?
+* Show total spend by career stage.
+* Show total spend by residence city.
+* What was my monthly spend trend?
+* What was my average order value?
+* Which merchants generated the highest spend?
 
-docs/architecture.md
+---
+
+## Technology Stack
+
+* Python
+* DuckDB
+* dbt
+* MetricFlow
+* Airflow
+* OpenAI API
+* Streamlit
+* Pandas
+
+---
+
+## Roadmap
+
+### Completed
+
+* Data ingestion pipeline
+* Warehouse layer
+* dbt modeling
+* Snapshots
+* Semantic layer
+* AI analytics assistant
+* Streamlit interface
+
+### Planned
+
+* Forecasting layer
+* Marketing analytics
+* Merchant analytics
+* Automated chart generation
+* Production deployment
+* Dockerized platform
+* Streamlit Cloud hosting
