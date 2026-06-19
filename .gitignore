@@ -85,3 +85,6 @@ __pycache__/
 
 # Airflow virtual environment
 venvairflow/
+
+# Private local source files
+data/private/
