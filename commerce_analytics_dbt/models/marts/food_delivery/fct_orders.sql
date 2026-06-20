@@ -56,7 +56,7 @@ select
         contains_restaurant_food,
         contains_pharmacy,
         contains_convenience_items,
-
+        order_category,
     (
         items_total_amount
         + fees_total_amount

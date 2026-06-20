@@ -1,13 +1,8 @@
-import json
-import pandas as pd
 import streamlit as st
+import pandas as pd
 
-from ai_metric_query import (
-    build_query_plan,
-    validate_plan,
-    run_metricflow,
-    explain_result,
-)
+from ai_metric_query import run_analytics_agent
+
 
 st.set_page_config(
     page_title="Commerce Analytics AI Assistant",
@@ -17,38 +12,104 @@ st.set_page_config(
 st.title("Commerce Analytics AI Assistant")
 st.write("Ask questions over your dbt Semantic Layer and MetricFlow metrics.")
 
+
+if "history" not in st.session_state:
+    st.session_state.history = []
+
+
 example_questions = [
     "How many orders did I have in Berlin with alcohol?",
+    "Compare alcohol spend vs grocery spend.",
     "Show total spend by career stage.",
     "Show total spend by residence city.",
     "What was my monthly spend trend?",
-    "What was my average order value?",
 ]
 
 question = st.text_input(
     "Ask a question",
-    placeholder="Example: Show total spend by career stage",
+    placeholder="Example: What about only Berlin?",
 )
 
 st.caption("Try: " + " | ".join(example_questions[:3]))
 
+
+with st.sidebar:
+    st.subheader("Session History")
+
+    if st.button("Clear history"):
+        st.session_state.history = []
+
+    if not st.session_state.history:
+        st.caption("No questions asked yet.")
+    else:
+        for i, item in enumerate(reversed(st.session_state.history), start=1):
+            with st.expander(f"{i}. {item['question']}"):
+                st.write(item["answer"])
+
+
+def render_tool_output(output: dict) -> None:
+    if isinstance(output, dict) and output.get("data"):
+        data = output["data"]
+        columns = output.get("columns", [])
+
+        df = pd.DataFrame(data)
+
+        st.dataframe(df, use_container_width=True)
+
+        if len(columns) >= 2:
+            x_col = columns[0]
+            y_cols = columns[1:]
+
+            numeric_cols = [
+                col for col in y_cols
+                if col in df.columns and pd.api.types.is_numeric_dtype(df[col])
+            ]
+
+            if numeric_cols:
+                chart_df = df.set_index(x_col)[numeric_cols]
+
+                x_name = x_col.lower()
+
+                if (
+                    "month" in x_name
+                    or "week" in x_name
+                    or "date" in x_name
+                    or "time" in x_name
+                ):
+                    st.line_chart(chart_df)
+                else:
+                    st.bar_chart(chart_df)
+
+    else:
+        st.json(output)
+
+
 if st.button("Run query") and question:
-    with st.spinner("Planning query..."):
-        plan = build_query_plan(question)
+    recent_history = st.session_state.history[-5:]
 
-    st.subheader("AI Query Plan")
-    st.json(plan)
+    with st.spinner("Agent is working..."):
+        response = run_analytics_agent(
+            question=question,
+            conversation_history=recent_history,
+        )
 
-    validate_plan(plan)
+    st.session_state.history.append(
+        {
+            "question": question,
+            "answer": response["answer"],
+            "tool_results": response["tool_results"],
+        }
+    )
 
-    with st.spinner("Running MetricFlow..."):
-        result = run_metricflow(plan)
+    st.subheader("AI Answer")
+    st.write(response["answer"])
 
-    st.subheader("MetricFlow Result")
-    st.text(result)
+    st.subheader("Agent Tool Calls")
 
-    with st.spinner("Generating explanation..."):
-        explanation = explain_result(question, plan, result)
+    for i, step in enumerate(response["tool_results"], start=1):
+        with st.expander(f"Step {i}: {step['tool']}"):
+            st.write("Arguments")
+            st.json(step["arguments"])
 
-    st.subheader("AI Explanation")
-    st.write(explanation)
+            st.write("Output")
+            render_tool_output(step["output"])

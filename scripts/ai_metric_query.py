@@ -1,6 +1,8 @@
 import difflib
 import json
 import os
+import io
+import pandas as pd
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -20,13 +22,12 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 client = OpenAI()
 
-
 print("\nLoading MetricFlow semantic metadata...")
 METRIC_CATALOG = get_metric_catalog()
 
 AVAILABLE_METRICS = sorted(METRIC_CATALOG.keys())
 
-AVAILABLE_GROUP_BYS = sorted(
+AVAILABLE_DIMENSIONS = sorted(
     {
         dimension
         for dimensions in METRIC_CATALOG.values()
@@ -34,15 +35,56 @@ AVAILABLE_GROUP_BYS = sorted(
     }
 )
 
-AVAILABLE_FILTERS = AVAILABLE_GROUP_BYS
+DIMENSION_ALIASES = {
+    "area": ["order__residence_city", "order__country_or_market"],
+    "city": ["order__residence_city"],
+    "country": ["order__country_or_market"],
+    "market": ["order__country_or_market"],
+    "merchant": ["order__merchant_name", "merchant__merchant_name"],
+    "restaurant": ["order__merchant_name"],
+    "store": ["order__merchant_name"],
+    "category": ["order__order_category"],
+    "payment": ["order__payment_method"],
+    "platform": ["order__source_platform"],
+}
 
+def find_similar_dimensions(
+    user_term: str,
+    metric_name: str | None = None,
+) -> dict:
+    term = user_term.strip().lower()
 
+    if metric_name:
+        candidate_dimensions = METRIC_CATALOG.get(metric_name, [])
+    else:
+        candidate_dimensions = AVAILABLE_DIMENSIONS
+
+    alias_matches = [
+        dim for dim in DIMENSION_ALIASES.get(term, [])
+        if dim in candidate_dimensions
+    ]
+
+    if alias_matches:
+        return {
+            "user_term": user_term,
+            "matches": alias_matches,
+            "method": "alias",
+        }
+
+    fuzzy_matches = difflib.get_close_matches(
+        term,
+        candidate_dimensions,
+        n=5,
+        cutoff=0.4,
+    )
+
+    return {
+        "user_term": user_term,
+        "matches": fuzzy_matches,
+        "method": "fuzzy",
+    }
 
 def discover_dimension_column(dimension_name: str) -> str | None:
-    """
-    Converts a MetricFlow dimension like order__residence_city
-    into a physical column like residence_city, if it exists in marts.fct_orders.
-    """
     column_guess = dimension_name.split("__")[-1]
 
     query = """
@@ -62,130 +104,6 @@ def discover_dimension_column(dimension_name: str) -> str | None:
 
     return None
 
-def build_query_plan(question: str) -> dict:
-    prompt = f"""
-You are an analytics semantic-layer planner.
-
-Convert the user question into a structured MetricFlow query plan.
-
-Available metrics:
-{AVAILABLE_METRICS}
-
-Available dimensions:
-{AVAILABLE_GROUP_BYS}
-
-Metric catalog:
-{json.dumps(METRIC_CATALOG, indent=2)}
-
-Return ONLY valid JSON with this structure:
-{{
-  "metrics": ["metric_name"],
-  "group_by": ["dimension_name"],
-  "filters": [
-    {{
-      "dimension": "dimension_name",
-      "operator": "=",
-      "value": "filter value"
-    }}
-  ]
-}}
-
-Rules:
-- Use only available metrics and dimensions.
-- A group_by or filter dimension must be valid for the selected metric.
-- Do not invent columns.
-- Do not write SQL.
-- Do not write MetricFlow Dimension syntax.
-- Put filter values exactly as understood from the user question.
-- Boolean values must be true/false, not strings.
-- If there are no groupings, return "group_by": [].
-- If there are no filters, return "filters": [].
-
-Examples:
-
-User: How many orders did I have in Berlin with alcohol?
-Return:
-{{
-  "metrics": ["order_count"],
-  "group_by": [],
-  "filters": [
-    {{
-      "dimension": "order__residence_city",
-      "operator": "=",
-      "value": "berlin"
-    }},
-    {{
-      "dimension": "order__contains_alcohol",
-      "operator": "=",
-      "value": true
-    }}
-  ]
-}}
-
-User: Show total spend by career stage
-Return:
-{{
-  "metrics": ["total_spend"],
-  "group_by": ["order__career_stage"],
-  "filters": []
-}}
-
-User question:
-{question}
-"""
-
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0,
-        response_format={"type": "json_object"},
-    )
-
-    content = response.choices[0].message.content
-
-    if not content:
-        raise ValueError("OpenAI returned an empty response.")
-
-    print("\nRaw AI response:")
-    print(content)
-
-    return json.loads(content)
-
-def decompose_question(user_input: str) -> list[str]:
-    prompt = f"""
-You are an analytics query decomposer.
-
-Break the user input into one or more independent analytics questions.
-
-Return ONLY valid JSON with this structure:
-{{
-  "questions": ["question 1", "question 2"]
-}}
-
-Rules:
-- If the user asks one question, return one question.
-- If the user separates questions with "|" or asks multiple things, split them.
-- Do not answer the questions.
-- Do not add new questions.
-
-User input:
-{user_input}
-"""
-
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0,
-        response_format={"type": "json_object"},
-    )
-
-    content = response.choices[0].message.content
-
-    if not content:
-        raise ValueError("OpenAI returned an empty decomposition response.")
-
-    parsed = json.loads(content)
-    return parsed.get("questions", [user_input])
 
 def get_dimension_values(dimension_name: str, limit: int = 100) -> list[Any]:
     column_name = discover_dimension_column(dimension_name)
@@ -202,9 +120,9 @@ def get_dimension_values(dimension_name: str, limit: int = 100) -> list[Any]:
     """
 
     with duckdb.connect(str(DUCKDB_PATH)) as conn:
-        values = conn.execute(query, [limit]).fetchall()
+        rows = conn.execute(query, [limit]).fetchall()
 
-    return [row[0] for row in values]
+    return [row[0] for row in rows]
 
 
 def resolve_dimension_value(dimension_name: str, value: Any) -> Any:
@@ -244,19 +162,20 @@ def resolve_dimension_value(dimension_name: str, value: Any) -> Any:
 def validate_plan(plan: dict) -> None:
     selected_metrics = plan.get("metrics", [])
 
+    if not selected_metrics:
+        raise ValueError("At least one metric is required.")
+
     for metric in selected_metrics:
         if metric not in AVAILABLE_METRICS:
             raise ValueError(f"Invalid metric: {metric}")
 
-    valid_dimensions_for_selected_metrics = set()
+    valid_dimensions = set()
 
     for metric in selected_metrics:
-        valid_dimensions_for_selected_metrics.update(
-            METRIC_CATALOG.get(metric, [])
-        )
+        valid_dimensions.update(METRIC_CATALOG.get(metric, []))
 
     for group_by in plan.get("group_by", []):
-        if group_by not in valid_dimensions_for_selected_metrics:
+        if group_by not in valid_dimensions:
             raise ValueError(
                 f"Invalid group_by '{group_by}' for metrics {selected_metrics}"
             )
@@ -265,7 +184,7 @@ def validate_plan(plan: dict) -> None:
         dimension = filter_item.get("dimension")
         operator = filter_item.get("operator")
 
-        if dimension not in valid_dimensions_for_selected_metrics:
+        if dimension not in valid_dimensions:
             raise ValueError(
                 f"Invalid filter dimension '{dimension}' for metrics {selected_metrics}"
             )
@@ -303,11 +222,6 @@ def build_where_clause(plan: dict) -> str | None:
             value=raw_value,
         )
 
-        print(
-            f"Resolved filter: {dimension} {operator} "
-            f"{raw_value!r} -> {resolved_value!r}"
-        )
-
         clause = (
             f"{{{{ Dimension('{dimension}') }}}} "
             f"{operator} "
@@ -320,6 +234,8 @@ def build_where_clause(plan: dict) -> str | None:
 
 
 def run_metricflow(plan: dict) -> str:
+    validate_plan(plan)
+
     command = ["mf", "query"]
 
     for metric in plan["metrics"]:
@@ -333,9 +249,6 @@ def run_metricflow(plan: dict) -> str:
     if where_clause:
         command.extend(["--where", where_clause])
 
-    print("\nMetricFlow command:")
-    print(" ".join(command))
-
     env = os.environ.copy()
     env["DBT_PROFILES_DIR"] = str(Path.home() / ".dbt")
 
@@ -348,91 +261,328 @@ def run_metricflow(plan: dict) -> str:
     )
 
     if result.returncode != 0:
-        print(result.stderr)
-        raise RuntimeError("MetricFlow query failed.")
+        return f"MetricFlow error:\n{result.stderr or result.stdout}"
 
     return result.stdout
 
 
-def explain_result(question: str, plan: dict, result: str) -> str:
-    prompt = f"""
-You are an analytics assistant.
+def tool_list_metrics() -> list[str]:
+    return AVAILABLE_METRICS
 
-User question:
-{question}
 
-Query plan:
-{json.dumps(plan, indent=2)}
+def tool_list_dimensions(metric_name: str) -> list[str]:
+    return METRIC_CATALOG.get(metric_name, [])
 
-Result:
-{result}
 
-Write a short, clear business answer.
-Do not mention SQL or MetricFlow.
-If the result is empty, say no matching data was found.
-"""
+def tool_get_dimension_values(
+    dimension_name: str,
+    limit: int = 100,
+) -> list[Any]:
+    return get_dimension_values(dimension_name, limit)
 
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0,
-    )
 
-    return response.choices[0].message.content or ""
+def tool_run_metricflow_query(
+    metrics: list[str],
+    group_by: list[str] | None = None,
+    filters: list[dict] | None = None,
+) -> dict:
+    plan = {
+        "metrics": metrics,
+        "group_by": group_by or [],
+        "filters": filters or [],
+    }
 
-def answer_question(question: str) -> dict:
-    print(f"\nQuestion: {question}")
+    try:
+        validate_plan(plan)
+        result = run_metricflow(plan)
+        df = parse_metricflow_result_to_dataframe(result)
 
-    print("\nPlanning query...")
-    plan = build_query_plan(question)
+        return {
+            "success": True,
+            "plan": plan,
+            "result": result,
+            "data": df.to_dict(orient="records"),
+            "columns": df.columns.tolist(),
+        }
 
-    print("\nQuery plan:")
-    print(json.dumps(plan, indent=2))
+    except Exception as exc:
+        return {
+            "success": False,
+            **build_validation_error_context(
+                error_message=str(exc),
+                plan=plan,
+            ),
+        }
 
-    validate_plan(plan)
 
-    print("\nRunning MetricFlow...")
-    result = run_metricflow(plan)
+TOOLS = [
+    {
+        "type": "function",
+        "function": {
+            "name": "list_metrics",
+            "description": "List available MetricFlow metrics.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "list_dimensions",
+            "description": "List dimensions available for a selected metric.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "metric_name": {
+                        "type": "string",
+                        "description": "Metric name, for example total_spend or order_count.",
+                    },
+                },
+                "required": ["metric_name"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_dimension_values",
+            "description": "Get real warehouse values for a dimension. Useful for resolving casing and spelling.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "dimension_name": {
+                        "type": "string",
+                        "description": "Dimension name, for example order__residence_city.",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Maximum number of values to return.",
+                    },
+                },
+                "required": ["dimension_name"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "run_metricflow_query",
+            "description": "Run a MetricFlow query using metrics, group_by dimensions, and filters.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "metrics": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "group_by": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "filters": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "dimension": {"type": "string"},
+                                "operator": {"type": "string"},
+                                "value": {},
+                            },
+                            "required": ["dimension", "operator", "value"],
+                        },
+                    },
+                },
+                "required": ["metrics"],
+            },
+        },
+    },
+    {
+    "type": "function",
+    "function": {
+        "name": "find_similar_dimensions",
+        "description": "Find likely MetricFlow dimensions for vague user terms like area, city, merchant, category, or platform.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "user_term": {"type": "string"},
+                "metric_name": {"type": "string"},
+            },
+            "required": ["user_term"],
+        },
+    },
+}
+]
 
-    print("\nResult:")
-    print(result)
 
-    explanation = explain_result(question, plan, result)
+TOOL_MAPPING = {
+    "list_metrics": tool_list_metrics,
+    "list_dimensions": tool_list_dimensions,
+    "get_dimension_values": tool_get_dimension_values,
+    "run_metricflow_query": tool_run_metricflow_query,
+    "find_similar_dimensions": find_similar_dimensions,
+}
 
-    print("\nAI Explanation:")
-    print(explanation)
+
+def run_analytics_agent(question: str,conversation_history: list[dict] | None = None,) -> dict:
+    history_text = json.dumps(conversation_history or [], indent=2, default=str)
+    messages = [
+        {
+            "role": "system",
+            "content": f"""
+You are an autonomous commerce analytics agent.
+
+You answer user questions using the available tools.
+
+Available high-level context:
+- Metrics are managed by MetricFlow.
+- Dimensions are metric-dependent.
+- You must use tools to get actual numeric results.
+- Do not invent metrics, dimensions, or values.
+- For comparisons, call run_metricflow_query multiple times if needed.
+- For breakdowns or trends, use group_by.
+- For exact filter values such as city or merchant names, use get_dimension_values when needed.
+- Final answer should be short, clear, and business-friendly.
+- If a tool returns success=false or an error, inspect the valid metrics/dimensions and retry with a corrected query.
+
+- If the user uses vague terms like area, region, category, shop, store, vendor, or merchant, call find_similar_dimensions before asking for clarification.
+Recent conversation history:
+{history_text}
+
+Use this only to resolve follow-up questions like:
+- What about Munich?
+- Now show that by city.
+- Only Berlin.
+
+Known metrics:
+{AVAILABLE_METRICS}
+""",
+        },
+        {"role": "user", "content": question},
+    ]
+
+    tool_results = []
+
+    for _ in range(10):
+        response = client.chat.completions.create(
+            model="gpt-4.1-mini",
+            messages=messages,
+            tools=TOOLS,
+            tool_choice="auto",
+            temperature=0,
+        )
+
+        message = response.choices[0].message
+        messages.append(message)
+
+        if not message.tool_calls:
+            return {
+                "question": question,
+                "answer": message.content or "",
+                "tool_results": tool_results,
+            }
+
+        for tool_call in message.tool_calls:
+            tool_name = tool_call.function.name
+            tool_args = json.loads(tool_call.function.arguments or "{}")
+
+            tool_function = TOOL_MAPPING.get(tool_name)
+
+            if not tool_function:
+                output = {"error": f"Unknown tool: {tool_name}"}
+            else:
+                try:
+                    output = tool_function(**tool_args)
+                except Exception as exc:
+                    output = {"error": str(exc)}
+
+            tool_results.append(
+                {
+                    "tool": tool_name,
+                    "arguments": tool_args,
+                    "output": output,
+                }
+            )
+
+            messages.append(
+                {
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,
+                    "name": tool_name,
+                    "content": json.dumps(output, default=str),
+                }
+            )
 
     return {
         "question": question,
-        "plan": plan,
-        "result": result,
-        "explanation": explanation,
+        "answer": "The agent could not complete the query within the tool-call limit.",
+        "tool_results": tool_results,
+    }
+
+def parse_metricflow_result_to_dataframe(result: str) -> pd.DataFrame:
+    lines = result.splitlines()
+
+    table_lines = []
+
+    for line in lines:
+        stripped = line.strip()
+
+        if not stripped:
+            continue
+
+        if stripped.startswith(("⠋", "⠙", "✔", "🌱")):
+            continue
+
+        if set(stripped) <= {"-", " "}:
+            continue
+
+        table_lines.append(line)
+
+    if len(table_lines) < 2:
+        return pd.DataFrame()
+
+    table_text = "\n".join(table_lines)
+
+    try:
+        df = pd.read_fwf(io.StringIO(table_text))
+        df = df.dropna(how="all")
+        return df
+    except Exception:
+        return pd.DataFrame()
+
+def build_validation_error_context(
+    error_message: str,
+    plan: dict,
+) -> dict:
+    selected_metrics = plan.get("metrics", [])
+
+    valid_dimensions = set()
+
+    for metric in selected_metrics:
+        valid_dimensions.update(METRIC_CATALOG.get(metric, []))
+
+    return {
+        "error": error_message,
+        "failed_plan": plan,
+        "valid_metrics": AVAILABLE_METRICS,
+        "valid_dimensions_for_selected_metrics": sorted(valid_dimensions),
+        "instruction": (
+            "Correct the failed query by using only valid metrics and dimensions. "
+            "If the user asked for an unavailable dimension, choose the closest valid dimension or explain that it is unavailable."
+        ),
     }
 
 def main() -> None:
-    user_input = input(
-        "Ask one or more commerce analytics questions: "
-    )
+    question = input("Ask a commerce analytics question: ")
+    response = run_analytics_agent(question)
 
-    print("\nDecomposing input...")
-    questions = decompose_question(user_input)
+    print("\nFinal Answer:")
+    print(response["answer"])
 
-    print("\nDetected questions:")
-
-    for i, question in enumerate(questions, start=1):
-        print(f"{i}. {question}")
-
-    all_answers = []
-
-    for question in questions:
-        answer = answer_question(question)
-        all_answers.append(answer)
-
-    print("\nFinal Summary:")
-
-    for i, answer in enumerate(all_answers, start=1):
-        print(f"\n{i}. {answer['question']}")
-        print(answer["explanation"])
+    print("\nTool Calls:")
+    print(json.dumps(response["tool_results"], indent=2, default=str))
 
 
 if __name__ == "__main__":
