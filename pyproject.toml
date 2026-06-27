@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-commerce-analytics"
+version = "0.1.0"
+description = "AI-native commerce analytics platform using dbt, MetricFlow, Streamlit, embeddings, and MCP."
+requires-python = ">=3.11"
+
+[tool.setuptools]
+packages = ["analytics", "mcp_server"]

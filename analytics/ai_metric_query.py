@@ -1,22 +1,31 @@
 import difflib
+import io
 import json
 import os
-import io
-import pandas as pd
 import subprocess
+import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 import duckdb
+import numpy as np
+import pandas as pd
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from semantic_metadata import get_metric_catalog
+from analytics.semantic_metadata import get_metric_catalog
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DBT_PROJECT_DIR = PROJECT_ROOT / "commerce_analytics_dbt"
 DUCKDB_PATH = PROJECT_ROOT / "data" / "warehouse" / "commerce_analytics.duckdb"
+
+SEMANTIC_INDEX_PATH = PROJECT_ROOT / "artifacts" / "semantic_index.json"
+EMBEDDING_MODEL = "text-embedding-3-small"
+
+AGENT_LOG_DIR = PROJECT_ROOT / "logs" / "agent_runs"
+AGENT_LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 load_dotenv(PROJECT_ROOT / ".env")
 
@@ -35,6 +44,7 @@ AVAILABLE_DIMENSIONS = sorted(
     }
 )
 
+
 DIMENSION_ALIASES = {
     "area": ["order__residence_city", "order__country_or_market"],
     "city": ["order__residence_city"],
@@ -43,10 +53,106 @@ DIMENSION_ALIASES = {
     "merchant": ["order__merchant_name", "merchant__merchant_name"],
     "restaurant": ["order__merchant_name"],
     "store": ["order__merchant_name"],
+    "shop": ["order__merchant_name", "merchant__merchant_name"],
+    "vendor": ["merchant__merchant_name", "order__merchant_name"],
     "category": ["order__order_category"],
     "payment": ["order__payment_method"],
     "platform": ["order__source_platform"],
 }
+
+
+def now_iso() -> str:
+    return datetime.now().isoformat(timespec="seconds")
+
+
+def log_execution_trace(trace: dict) -> None:
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_path = AGENT_LOG_DIR / f"agent_trace_{timestamp}.json"
+
+    with open(log_path, "w", encoding="utf-8") as f:
+        json.dump(trace, f, indent=2, default=str)
+
+    print(f"\nExecution trace logged to: {log_path}")
+
+
+def cosine_similarity(a: list[float], b: list[float]) -> float:
+    a_arr = np.array(a)
+    b_arr = np.array(b)
+
+    denominator = np.linalg.norm(a_arr) * np.linalg.norm(b_arr)
+
+    if denominator == 0:
+        return 0.0
+
+    return float(np.dot(a_arr, b_arr) / denominator)
+
+
+def get_embedding(text: str) -> list[float]:
+    response = client.embeddings.create(
+        model=EMBEDDING_MODEL,
+        input=text,
+    )
+
+    return response.data[0].embedding
+
+
+def load_semantic_index() -> list[dict]:
+    if not SEMANTIC_INDEX_PATH.exists():
+        return []
+
+    with open(SEMANTIC_INDEX_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def search_semantic_layer(
+    query: str,
+    object_type: str | None = None,
+    metric_name: str | None = None,
+    top_k: int = 8,
+) -> dict:
+    index = load_semantic_index()
+
+    if not index:
+        return {
+            "query": query,
+            "matches": [],
+            "error": "Semantic index not found. Run scripts/build_semantic_index.py first.",
+        }
+
+    query_embedding = get_embedding(query)
+
+    scored = []
+
+    for item in index:
+        if object_type and item.get("type") != object_type:
+            continue
+
+        if metric_name and metric_name not in item.get("metrics", []):
+            continue
+
+        score = cosine_similarity(query_embedding, item["embedding"])
+
+        scored.append(
+            {
+                "type": item.get("type"),
+                "name": item.get("name"),
+                "metric": item.get("metric"),
+                "dimension": item.get("dimension"),
+                "metrics": item.get("metrics", []),
+                "score": round(score, 4),
+                "text": item.get("text"),
+            }
+        )
+
+    scored = sorted(scored, key=lambda x: x["score"], reverse=True)
+
+    return {
+        "query": query,
+        "object_type": object_type,
+        "metric_name": metric_name,
+        "matches": scored[:top_k],
+    }
+
 
 def find_similar_dimensions(
     user_term: str,
@@ -60,7 +166,8 @@ def find_similar_dimensions(
         candidate_dimensions = AVAILABLE_DIMENSIONS
 
     alias_matches = [
-        dim for dim in DIMENSION_ALIASES.get(term, [])
+        dim
+        for dim in DIMENSION_ALIASES.get(term, [])
         if dim in candidate_dimensions
     ]
 
@@ -83,6 +190,7 @@ def find_similar_dimensions(
         "matches": fuzzy_matches,
         "method": "fuzzy",
     }
+
 
 def discover_dimension_column(dimension_name: str) -> str | None:
     column_guess = dimension_name.split("__")[-1]
@@ -193,6 +301,29 @@ def validate_plan(plan: dict) -> None:
             raise ValueError(f"Invalid filter operator: {operator}")
 
 
+def build_validation_error_context(
+    error_message: str,
+    plan: dict,
+) -> dict:
+    selected_metrics = plan.get("metrics", [])
+
+    valid_dimensions = set()
+
+    for metric in selected_metrics:
+        valid_dimensions.update(METRIC_CATALOG.get(metric, []))
+
+    return {
+        "error": error_message,
+        "failed_plan": plan,
+        "valid_metrics": AVAILABLE_METRICS,
+        "valid_dimensions_for_selected_metrics": sorted(valid_dimensions),
+        "instruction": (
+            "Correct the failed query by using only valid metrics and dimensions. "
+            "If the user asked for an unavailable dimension, choose the closest valid dimension or explain that it is unavailable."
+        ),
+    }
+
+
 def format_value_for_where(value: Any) -> str:
     if isinstance(value, bool):
         return "true" if value else "false"
@@ -233,7 +364,7 @@ def build_where_clause(plan: dict) -> str | None:
     return " and ".join(clauses)
 
 
-def run_metricflow(plan: dict) -> str:
+def run_metricflow(plan: dict) -> dict:
     validate_plan(plan)
 
     command = ["mf", "query"]
@@ -249,6 +380,8 @@ def run_metricflow(plan: dict) -> str:
     if where_clause:
         command.extend(["--where", where_clause])
 
+    metricflow_command = " ".join(command)
+
     env = os.environ.copy()
     env["DBT_PROFILES_DIR"] = str(Path.home() / ".dbt")
 
@@ -260,10 +393,43 @@ def run_metricflow(plan: dict) -> str:
         capture_output=True,
     )
 
-    if result.returncode != 0:
-        return f"MetricFlow error:\n{result.stderr or result.stdout}"
+    return {
+        "metricflow_command": metricflow_command,
+        "raw_result": result.stdout,
+        "error": None if result.returncode == 0 else result.stderr or result.stdout,
+    }
 
-    return result.stdout
+
+def parse_metricflow_result_to_dataframe(result: str) -> pd.DataFrame:
+    lines = result.splitlines()
+
+    table_lines = []
+
+    for line in lines:
+        stripped = line.strip()
+
+        if not stripped:
+            continue
+
+        if stripped.startswith(("⠋", "⠙", "✔", "🌱")):
+            continue
+
+        if set(stripped) <= {"-", " "}:
+            continue
+
+        table_lines.append(line)
+
+    if len(table_lines) < 2:
+        return pd.DataFrame()
+
+    table_text = "\n".join(table_lines)
+
+    try:
+        df = pd.read_fwf(io.StringIO(table_text))
+        df = df.dropna(how="all")
+        return df
+    except Exception:
+        return pd.DataFrame()
 
 
 def tool_list_metrics() -> list[str]:
@@ -294,13 +460,17 @@ def tool_run_metricflow_query(
 
     try:
         validate_plan(plan)
-        result = run_metricflow(plan)
-        df = parse_metricflow_result_to_dataframe(result)
+
+        metricflow_response = run_metricflow(plan)
+        raw_result = metricflow_response.get("raw_result", "")
+        df = parse_metricflow_result_to_dataframe(raw_result)
 
         return {
-            "success": True,
+            "success": metricflow_response.get("error") is None,
             "plan": plan,
-            "result": result,
+            "metricflow_command": metricflow_response.get("metricflow_command"),
+            "result": raw_result,
+            "error": metricflow_response.get("error"),
             "data": df.to_dict(orient="records"),
             "columns": df.columns.tolist(),
         }
@@ -400,20 +570,43 @@ TOOLS = [
         },
     },
     {
-    "type": "function",
-    "function": {
-        "name": "find_similar_dimensions",
-        "description": "Find likely MetricFlow dimensions for vague user terms like area, city, merchant, category, or platform.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "user_term": {"type": "string"},
-                "metric_name": {"type": "string"},
+        "type": "function",
+        "function": {
+            "name": "find_similar_dimensions",
+            "description": "Find likely MetricFlow dimensions for vague user terms like area, city, merchant, category, shop, vendor, or platform.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "user_term": {"type": "string"},
+                    "metric_name": {"type": "string"},
+                },
+                "required": ["user_term"],
             },
-            "required": ["user_term"],
         },
     },
-}
+    {
+        "type": "function",
+        "function": {
+            "name": "search_semantic_layer",
+            "description": "Search the semantic layer using natural language. Use this to find relevant metrics, dimensions, or metric-dimension relationships when the user uses business terms like spend, money, area, city, shop, merchant, refund, order, grocery, alcohol, or category.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string"},
+                    "object_type": {
+                        "type": "string",
+                        "description": "Optional filter: metric, dimension, or relationship.",
+                    },
+                    "metric_name": {
+                        "type": "string",
+                        "description": "Optional metric filter, for example total_spend.",
+                    },
+                    "top_k": {"type": "integer"},
+                },
+                "required": ["query"],
+            },
+        },
+    },
 ]
 
 
@@ -423,11 +616,19 @@ TOOL_MAPPING = {
     "get_dimension_values": tool_get_dimension_values,
     "run_metricflow_query": tool_run_metricflow_query,
     "find_similar_dimensions": find_similar_dimensions,
+    "search_semantic_layer": search_semantic_layer,
 }
 
 
-def run_analytics_agent(question: str,conversation_history: list[dict] | None = None,) -> dict:
+def run_analytics_agent(
+    question: str,
+    conversation_history: list[dict] | None = None,
+) -> dict:
     history_text = json.dumps(conversation_history or [], indent=2, default=str)
+
+    run_started_at = now_iso()
+    trace_steps = []
+
     messages = [
         {
             "role": "system",
@@ -446,8 +647,10 @@ Available high-level context:
 - For exact filter values such as city or merchant names, use get_dimension_values when needed.
 - Final answer should be short, clear, and business-friendly.
 - If a tool returns success=false or an error, inspect the valid metrics/dimensions and retry with a corrected query.
-
+- If the user uses business terms that may not exactly match MetricFlow names, call search_semantic_layer before choosing metrics or dimensions.
+- Use search_semantic_layer for vague terms like spend, money, area, city, shop, merchant, refund, order, grocery, alcohol, category, market, or platform.
 - If the user uses vague terms like area, region, category, shop, store, vendor, or merchant, call find_similar_dimensions before asking for clarification.
+
 Recent conversation history:
 {history_text}
 
@@ -478,10 +681,26 @@ Known metrics:
         messages.append(message)
 
         if not message.tool_calls:
+            final_answer = message.content or ""
+
+            execution_trace = {
+                "started_at": run_started_at,
+                "finished_at": now_iso(),
+                "question": question,
+                "conversation_history_used": conversation_history or [],
+                "final_answer": final_answer,
+                "steps": trace_steps,
+                "status": "success",
+                "error": None,
+            }
+
+            log_execution_trace(execution_trace)
+
             return {
                 "question": question,
-                "answer": message.content or "",
+                "answer": final_answer,
                 "tool_results": tool_results,
+                "execution_trace": execution_trace,
             }
 
         for tool_call in message.tool_calls:
@@ -490,6 +709,8 @@ Known metrics:
 
             tool_function = TOOL_MAPPING.get(tool_name)
 
+            step_start = time.perf_counter()
+
             if not tool_function:
                 output = {"error": f"Unknown tool: {tool_name}"}
             else:
@@ -497,6 +718,18 @@ Known metrics:
                     output = tool_function(**tool_args)
                 except Exception as exc:
                     output = {"error": str(exc)}
+
+            duration_ms = (time.perf_counter() - step_start) * 1000
+
+            trace_step = {
+                "step_number": len(trace_steps) + 1,
+                "tool_name": tool_name,
+                "arguments": tool_args,
+                "output": output,
+                "duration_ms": round(duration_ms, 2),
+            }
+
+            trace_steps.append(trace_step)
 
             tool_results.append(
                 {
@@ -515,64 +748,28 @@ Known metrics:
                 }
             )
 
+    fallback_answer = "The agent could not complete the query within the tool-call limit."
+
+    execution_trace = {
+        "started_at": run_started_at,
+        "finished_at": now_iso(),
+        "question": question,
+        "conversation_history_used": conversation_history or [],
+        "final_answer": fallback_answer,
+        "steps": trace_steps,
+        "status": "failed",
+        "error": "Tool-call limit reached",
+    }
+
+    log_execution_trace(execution_trace)
+
     return {
         "question": question,
-        "answer": "The agent could not complete the query within the tool-call limit.",
+        "answer": fallback_answer,
         "tool_results": tool_results,
+        "execution_trace": execution_trace,
     }
 
-def parse_metricflow_result_to_dataframe(result: str) -> pd.DataFrame:
-    lines = result.splitlines()
-
-    table_lines = []
-
-    for line in lines:
-        stripped = line.strip()
-
-        if not stripped:
-            continue
-
-        if stripped.startswith(("⠋", "⠙", "✔", "🌱")):
-            continue
-
-        if set(stripped) <= {"-", " "}:
-            continue
-
-        table_lines.append(line)
-
-    if len(table_lines) < 2:
-        return pd.DataFrame()
-
-    table_text = "\n".join(table_lines)
-
-    try:
-        df = pd.read_fwf(io.StringIO(table_text))
-        df = df.dropna(how="all")
-        return df
-    except Exception:
-        return pd.DataFrame()
-
-def build_validation_error_context(
-    error_message: str,
-    plan: dict,
-) -> dict:
-    selected_metrics = plan.get("metrics", [])
-
-    valid_dimensions = set()
-
-    for metric in selected_metrics:
-        valid_dimensions.update(METRIC_CATALOG.get(metric, []))
-
-    return {
-        "error": error_message,
-        "failed_plan": plan,
-        "valid_metrics": AVAILABLE_METRICS,
-        "valid_dimensions_for_selected_metrics": sorted(valid_dimensions),
-        "instruction": (
-            "Correct the failed query by using only valid metrics and dimensions. "
-            "If the user asked for an unavailable dimension, choose the closest valid dimension or explain that it is unavailable."
-        ),
-    }
 
 def main() -> None:
     question = input("Ask a commerce analytics question: ")
@@ -581,8 +778,8 @@ def main() -> None:
     print("\nFinal Answer:")
     print(response["answer"])
 
-    print("\nTool Calls:")
-    print(json.dumps(response["tool_results"], indent=2, default=str))
+    print("\nExecution Trace:")
+    print(json.dumps(response["execution_trace"], indent=2, default=str))
 
 
 if __name__ == "__main__":

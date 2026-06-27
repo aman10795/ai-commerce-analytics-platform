@@ -1,0 +1,3909 @@
+{
+  "started_at": "2026-06-27T11:50:50",
+  "finished_at": "2026-06-27T11:53:29",
+  "total_cases": 8,
+  "passed_cases": 6,
+  "failed_cases": 2,
+  "pass_rate": 0.75,
+  "results": [
+    {
+      "id": "basic_total_spend",
+      "question": "How much money did I spend?",
+      "passed": true,
+      "checks": [
+        {
+          "check": "expected_tools",
+          "passed": true,
+          "message": "Expected tools used."
+        },
+        {
+          "check": "metricflow_success",
+          "passed": true,
+          "message": "MetricFlow succeeded."
+        },
+        {
+          "check": "expected_metrics",
+          "passed": true,
+          "message": "Expected metrics found."
+        },
+        {
+          "check": "expected_group_by",
+          "passed": true,
+          "message": "Expected group_by found."
+        },
+        {
+          "check": "expected_filters",
+          "passed": true,
+          "message": "No filter expectation."
+        }
+      ],
+      "answer": "You have spent a total of 83.25 units of money.",
+      "plans": [
+        {
+          "metrics": [
+            "total_spend"
+          ],
+          "group_by": [],
+          "filters": []
+        }
+      ],
+      "tool_results": [
+        {
+          "tool": "search_semantic_layer",
+          "arguments": {
+            "query": "money spent"
+          },
+          "output": {
+            "query": "money spent",
+            "object_type": null,
+            "metric_name": null,
+            "matches": [
+              {
+                "type": "relationship",
+                "name": "total_spend::order__career_stage",
+                "metric": "total_spend",
+                "dimension": "order__career_stage",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.427,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__career_stage.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order career stage\nDimension description:"
+              },
+              {
+                "type": "metric",
+                "name": "total_spend",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4245,
+                "text": "Semantic object type: metric\nMetric name: total_spend\nReadable name: total spend\nDescription: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nUse this metric when the user asks about total spend."
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::merchant__first_order_date",
+                "metric": "total_spend",
+                "dimension": "merchant__first_order_date",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4227,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension merchant__first_order_date.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: merchant first order date\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::order__currency",
+                "metric": "total_spend",
+                "dimension": "order__currency",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4223,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__currency.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order currency\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::metric_time",
+                "metric": "total_spend",
+                "dimension": "metric_time",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4219,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension metric_time.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: metric time\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::merchant__merchant_legal_name",
+                "metric": "total_spend",
+                "dimension": "merchant__merchant_legal_name",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4205,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension merchant__merchant_legal_name.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: merchant merchant legal name\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::order__week_of_month",
+                "metric": "total_spend",
+                "dimension": "order__week_of_month",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4204,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__week_of_month.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order week of month\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::order__payment_method",
+                "metric": "total_spend",
+                "dimension": "order__payment_method",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4197,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__payment_method.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order payment method\nDimension description:"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "total_spend"
+            ]
+          },
+          "output": {
+            "success": true,
+            "plan": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [],
+              "filters": []
+            },
+            "metricflow_command": "mf query --metrics total_spend",
+            "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.22 seconds\n  total_spend\n-------------\n        83.25\n\n",
+            "error": null,
+            "data": [
+              {
+                "total_spend": 83.25
+              }
+            ],
+            "columns": [
+              "total_spend"
+            ]
+          }
+        }
+      ],
+      "execution_trace": {
+        "started_at": "2026-06-27T11:50:50",
+        "finished_at": "2026-06-27T11:51:07",
+        "question": "How much money did I spend?",
+        "conversation_history_used": [],
+        "final_answer": "You have spent a total of 83.25 units of money.",
+        "steps": [
+          {
+            "step_number": 1,
+            "tool_name": "search_semantic_layer",
+            "arguments": {
+              "query": "money spent"
+            },
+            "output": {
+              "query": "money spent",
+              "object_type": null,
+              "metric_name": null,
+              "matches": [
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__career_stage",
+                  "metric": "total_spend",
+                  "dimension": "order__career_stage",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.427,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__career_stage.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order career stage\nDimension description:"
+                },
+                {
+                  "type": "metric",
+                  "name": "total_spend",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4245,
+                  "text": "Semantic object type: metric\nMetric name: total_spend\nReadable name: total spend\nDescription: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nUse this metric when the user asks about total spend."
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::merchant__first_order_date",
+                  "metric": "total_spend",
+                  "dimension": "merchant__first_order_date",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4227,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension merchant__first_order_date.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: merchant first order date\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__currency",
+                  "metric": "total_spend",
+                  "dimension": "order__currency",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4223,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__currency.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order currency\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::metric_time",
+                  "metric": "total_spend",
+                  "dimension": "metric_time",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4219,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension metric_time.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: metric time\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::merchant__merchant_legal_name",
+                  "metric": "total_spend",
+                  "dimension": "merchant__merchant_legal_name",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4205,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension merchant__merchant_legal_name.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: merchant merchant legal name\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__week_of_month",
+                  "metric": "total_spend",
+                  "dimension": "order__week_of_month",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4204,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__week_of_month.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order week of month\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__payment_method",
+                  "metric": "total_spend",
+                  "dimension": "order__payment_method",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4197,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__payment_method.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order payment method\nDimension description:"
+                }
+              ]
+            },
+            "duration_ms": 1011.03
+          },
+          {
+            "step_number": 2,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "total_spend"
+              ]
+            },
+            "output": {
+              "success": true,
+              "plan": {
+                "metrics": [
+                  "total_spend"
+                ],
+                "group_by": [],
+                "filters": []
+              },
+              "metricflow_command": "mf query --metrics total_spend",
+              "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.22 seconds\n  total_spend\n-------------\n        83.25\n\n",
+              "error": null,
+              "data": [
+                {
+                  "total_spend": 83.25
+                }
+              ],
+              "columns": [
+                "total_spend"
+              ]
+            },
+            "duration_ms": 6118.76
+          }
+        ],
+        "status": "success",
+        "error": null
+      }
+    },
+    {
+      "id": "spend_by_shop",
+      "question": "How much money by shop?",
+      "passed": true,
+      "checks": [
+        {
+          "check": "expected_tools",
+          "passed": true,
+          "message": "Expected tools used."
+        },
+        {
+          "check": "metricflow_success",
+          "passed": true,
+          "message": "MetricFlow succeeded."
+        },
+        {
+          "check": "expected_metrics",
+          "passed": true,
+          "message": "Expected metrics found."
+        },
+        {
+          "check": "expected_group_by",
+          "passed": true,
+          "message": "Expected group_by found."
+        },
+        {
+          "check": "expected_filters",
+          "passed": true,
+          "message": "No filter expectation."
+        }
+      ],
+      "answer": "Here is the total money spent by shop (merchant):\n- The Biryani Club: 24.25\n- Domino's Pizza Berlin Wilmersdorf: 13.49\n- KFC Berlin Kurt-Schumacher-Damm: 14.09\n- Lei\u2018s K\u00fcche: 18.22\n- Sp\u00e4ti Bull: 13.20\n\nLet me know if you want more details or other shops.",
+      "plans": [
+        {
+          "metrics": [
+            "total_spend"
+          ],
+          "group_by": [
+            "order__merchant_name"
+          ],
+          "filters": []
+        }
+      ],
+      "tool_results": [
+        {
+          "tool": "search_semantic_layer",
+          "arguments": {
+            "query": "money by shop",
+            "object_type": "metric"
+          },
+          "output": {
+            "query": "money by shop",
+            "object_type": "metric",
+            "metric_name": null,
+            "matches": [
+              {
+                "type": "metric",
+                "name": "merchant_lifetime_spend",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "merchant_lifetime_spend"
+                ],
+                "score": 0.3029,
+                "text": "Semantic object type: metric\nMetric name: merchant_lifetime_spend\nReadable name: merchant lifetime spend\nDescription: \nUse this metric when the user asks about merchant lifetime spend."
+              },
+              {
+                "type": "metric",
+                "name": "total_spend",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.2803,
+                "text": "Semantic object type: metric\nMetric name: total_spend\nReadable name: total spend\nDescription: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nUse this metric when the user asks about total spend."
+              },
+              {
+                "type": "metric",
+                "name": "items_total",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "items_total"
+                ],
+                "score": 0.2362,
+                "text": "Semantic object type: metric\nMetric name: items_total\nReadable name: items total\nDescription: Total value of ordered items before fees, delivery charges, tips, discounts, and refunds. Use when users ask about food/item/product spend excluding extra charges.\nUse this metric when the user asks about items total."
+              },
+              {
+                "type": "metric",
+                "name": "merchant_average_order_value",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "merchant_average_order_value"
+                ],
+                "score": 0.2333,
+                "text": "Semantic object type: metric\nMetric name: merchant_average_order_value\nReadable name: merchant average order value\nDescription: \nUse this metric when the user asks about merchant average order value."
+              },
+              {
+                "type": "metric",
+                "name": "merchant_total_orders",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "merchant_total_orders"
+                ],
+                "score": 0.2212,
+                "text": "Semantic object type: metric\nMetric name: merchant_total_orders\nReadable name: merchant total orders\nDescription: \nUse this metric when the user asks about merchant total orders."
+              },
+              {
+                "type": "metric",
+                "name": "merchant_count",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "merchant_count"
+                ],
+                "score": 0.2186,
+                "text": "Semantic object type: metric\nMetric name: merchant_count\nReadable name: merchant count\nDescription: \nUse this metric when the user asks about merchant count."
+              },
+              {
+                "type": "metric",
+                "name": "average_order_value",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value"
+                ],
+                "score": 0.2123,
+                "text": "Semantic object type: metric\nMetric name: average_order_value\nReadable name: average order value\nDescription: Average spend per order, calculated as total spend divided by order count. Use when users ask about average basket size, average order value, average spend, or typical order amount.\nUse this metric when the user asks about average order value."
+              },
+              {
+                "type": "metric",
+                "name": "refund_ratio",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "refund_ratio"
+                ],
+                "score": 0.2071,
+                "text": "Semantic object type: metric\nMetric name: refund_ratio\nReadable name: refund ratio\nDescription: Share of total spend refunded back. Use when users ask about refund rate, refund percentage, problem orders, or money returned.\nUse this metric when the user asks about refund ratio."
+              }
+            ]
+          }
+        },
+        {
+          "tool": "find_similar_dimensions",
+          "arguments": {
+            "user_term": "shop"
+          },
+          "output": {
+            "user_term": "shop",
+            "matches": [
+              "order__merchant_name",
+              "merchant__merchant_name"
+            ],
+            "method": "alias"
+          }
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "total_spend"
+            ],
+            "group_by": [
+              "order__merchant_name"
+            ]
+          },
+          "output": {
+            "success": true,
+            "plan": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__merchant_name"
+              ],
+              "filters": []
+            },
+            "metricflow_command": "mf query --metrics total_spend --group-by order__merchant_name",
+            "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.26 seconds\norder__merchant_name                 total_spend\n---------------------------------  -------------\nThe Biryani Club                           24.25\nDomino's Pizza Berlin Wilmersdorf          13.49\nKFC Berlin Kurt-Schumacher-Damm            14.09\nLei\u2018s K\u00fcche                                18.22\nSp\u00e4ti Bull                                 13.2\n\n",
+            "error": null,
+            "data": [
+              {
+                "order__merchant_name": "The Biryani Club",
+                "total_spend": 24.25
+              },
+              {
+                "order__merchant_name": "Domino's Pizza Berlin Wilmersdorf",
+                "total_spend": 13.49
+              },
+              {
+                "order__merchant_name": "KFC Berlin Kurt-Schumacher-Damm",
+                "total_spend": 14.09
+              },
+              {
+                "order__merchant_name": "Lei\u2018s K\u00fcche",
+                "total_spend": 18.22
+              },
+              {
+                "order__merchant_name": "Sp\u00e4ti Bull",
+                "total_spend": 13.2
+              }
+            ],
+            "columns": [
+              "order__merchant_name",
+              "total_spend"
+            ]
+          }
+        }
+      ],
+      "execution_trace": {
+        "started_at": "2026-06-27T11:51:07",
+        "finished_at": "2026-06-27T11:51:21",
+        "question": "How much money by shop?",
+        "conversation_history_used": [],
+        "final_answer": "Here is the total money spent by shop (merchant):\n- The Biryani Club: 24.25\n- Domino's Pizza Berlin Wilmersdorf: 13.49\n- KFC Berlin Kurt-Schumacher-Damm: 14.09\n- Lei\u2018s K\u00fcche: 18.22\n- Sp\u00e4ti Bull: 13.20\n\nLet me know if you want more details or other shops.",
+        "steps": [
+          {
+            "step_number": 1,
+            "tool_name": "search_semantic_layer",
+            "arguments": {
+              "query": "money by shop",
+              "object_type": "metric"
+            },
+            "output": {
+              "query": "money by shop",
+              "object_type": "metric",
+              "metric_name": null,
+              "matches": [
+                {
+                  "type": "metric",
+                  "name": "merchant_lifetime_spend",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "merchant_lifetime_spend"
+                  ],
+                  "score": 0.3029,
+                  "text": "Semantic object type: metric\nMetric name: merchant_lifetime_spend\nReadable name: merchant lifetime spend\nDescription: \nUse this metric when the user asks about merchant lifetime spend."
+                },
+                {
+                  "type": "metric",
+                  "name": "total_spend",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.2803,
+                  "text": "Semantic object type: metric\nMetric name: total_spend\nReadable name: total spend\nDescription: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nUse this metric when the user asks about total spend."
+                },
+                {
+                  "type": "metric",
+                  "name": "items_total",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "items_total"
+                  ],
+                  "score": 0.2362,
+                  "text": "Semantic object type: metric\nMetric name: items_total\nReadable name: items total\nDescription: Total value of ordered items before fees, delivery charges, tips, discounts, and refunds. Use when users ask about food/item/product spend excluding extra charges.\nUse this metric when the user asks about items total."
+                },
+                {
+                  "type": "metric",
+                  "name": "merchant_average_order_value",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "merchant_average_order_value"
+                  ],
+                  "score": 0.2333,
+                  "text": "Semantic object type: metric\nMetric name: merchant_average_order_value\nReadable name: merchant average order value\nDescription: \nUse this metric when the user asks about merchant average order value."
+                },
+                {
+                  "type": "metric",
+                  "name": "merchant_total_orders",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "merchant_total_orders"
+                  ],
+                  "score": 0.2212,
+                  "text": "Semantic object type: metric\nMetric name: merchant_total_orders\nReadable name: merchant total orders\nDescription: \nUse this metric when the user asks about merchant total orders."
+                },
+                {
+                  "type": "metric",
+                  "name": "merchant_count",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "merchant_count"
+                  ],
+                  "score": 0.2186,
+                  "text": "Semantic object type: metric\nMetric name: merchant_count\nReadable name: merchant count\nDescription: \nUse this metric when the user asks about merchant count."
+                },
+                {
+                  "type": "metric",
+                  "name": "average_order_value",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value"
+                  ],
+                  "score": 0.2123,
+                  "text": "Semantic object type: metric\nMetric name: average_order_value\nReadable name: average order value\nDescription: Average spend per order, calculated as total spend divided by order count. Use when users ask about average basket size, average order value, average spend, or typical order amount.\nUse this metric when the user asks about average order value."
+                },
+                {
+                  "type": "metric",
+                  "name": "refund_ratio",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "refund_ratio"
+                  ],
+                  "score": 0.2071,
+                  "text": "Semantic object type: metric\nMetric name: refund_ratio\nReadable name: refund ratio\nDescription: Share of total spend refunded back. Use when users ask about refund rate, refund percentage, problem orders, or money returned.\nUse this metric when the user asks about refund ratio."
+                }
+              ]
+            },
+            "duration_ms": 686.2
+          },
+          {
+            "step_number": 2,
+            "tool_name": "find_similar_dimensions",
+            "arguments": {
+              "user_term": "shop"
+            },
+            "output": {
+              "user_term": "shop",
+              "matches": [
+                "order__merchant_name",
+                "merchant__merchant_name"
+              ],
+              "method": "alias"
+            },
+            "duration_ms": 0.02
+          },
+          {
+            "step_number": 3,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__merchant_name"
+              ]
+            },
+            "output": {
+              "success": true,
+              "plan": {
+                "metrics": [
+                  "total_spend"
+                ],
+                "group_by": [
+                  "order__merchant_name"
+                ],
+                "filters": []
+              },
+              "metricflow_command": "mf query --metrics total_spend --group-by order__merchant_name",
+              "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.26 seconds\norder__merchant_name                 total_spend\n---------------------------------  -------------\nThe Biryani Club                           24.25\nDomino's Pizza Berlin Wilmersdorf          13.49\nKFC Berlin Kurt-Schumacher-Damm            14.09\nLei\u2018s K\u00fcche                                18.22\nSp\u00e4ti Bull                                 13.2\n\n",
+              "error": null,
+              "data": [
+                {
+                  "order__merchant_name": "The Biryani Club",
+                  "total_spend": 24.25
+                },
+                {
+                  "order__merchant_name": "Domino's Pizza Berlin Wilmersdorf",
+                  "total_spend": 13.49
+                },
+                {
+                  "order__merchant_name": "KFC Berlin Kurt-Schumacher-Damm",
+                  "total_spend": 14.09
+                },
+                {
+                  "order__merchant_name": "Lei\u2018s K\u00fcche",
+                  "total_spend": 18.22
+                },
+                {
+                  "order__merchant_name": "Sp\u00e4ti Bull",
+                  "total_spend": 13.2
+                }
+              ],
+              "columns": [
+                "order__merchant_name",
+                "total_spend"
+              ]
+            },
+            "duration_ms": 6226.87
+          }
+        ],
+        "status": "success",
+        "error": null
+      }
+    },
+    {
+      "id": "spend_by_city",
+      "question": "Show spend by city.",
+      "passed": true,
+      "checks": [
+        {
+          "check": "expected_tools",
+          "passed": true,
+          "message": "Expected tools used."
+        },
+        {
+          "check": "metricflow_success",
+          "passed": true,
+          "message": "MetricFlow succeeded."
+        },
+        {
+          "check": "expected_metrics",
+          "passed": true,
+          "message": "Expected metrics found."
+        },
+        {
+          "check": "expected_group_by",
+          "passed": true,
+          "message": "Expected group_by found."
+        },
+        {
+          "check": "expected_filters",
+          "passed": true,
+          "message": "No filter expectation."
+        }
+      ],
+      "answer": "The total spend by city shows Berlin with a total spend of 83.25. If you want spend data for other cities or a broader list, please let me know.",
+      "plans": [
+        {
+          "metrics": [
+            "total_spend"
+          ],
+          "group_by": [
+            "order__residence_city"
+          ],
+          "filters": []
+        }
+      ],
+      "tool_results": [
+        {
+          "tool": "search_semantic_layer",
+          "arguments": {
+            "query": "spend by city",
+            "object_type": "metric"
+          },
+          "output": {
+            "query": "spend by city",
+            "object_type": "metric",
+            "metric_name": null,
+            "matches": [
+              {
+                "type": "metric",
+                "name": "total_spend",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4144,
+                "text": "Semantic object type: metric\nMetric name: total_spend\nReadable name: total spend\nDescription: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nUse this metric when the user asks about total spend."
+              },
+              {
+                "type": "metric",
+                "name": "merchant_lifetime_spend",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "merchant_lifetime_spend"
+                ],
+                "score": 0.3355,
+                "text": "Semantic object type: metric\nMetric name: merchant_lifetime_spend\nReadable name: merchant lifetime spend\nDescription: \nUse this metric when the user asks about merchant lifetime spend."
+              },
+              {
+                "type": "metric",
+                "name": "items_total",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "items_total"
+                ],
+                "score": 0.2435,
+                "text": "Semantic object type: metric\nMetric name: items_total\nReadable name: items total\nDescription: Total value of ordered items before fees, delivery charges, tips, discounts, and refunds. Use when users ask about food/item/product spend excluding extra charges.\nUse this metric when the user asks about items total."
+              },
+              {
+                "type": "metric",
+                "name": "delivery_fee_ratio",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "delivery_fee_ratio"
+                ],
+                "score": 0.2237,
+                "text": "Semantic object type: metric\nMetric name: delivery_fee_ratio\nReadable name: delivery fee ratio\nDescription: Share of total spend represented by delivery charges. Use when users ask how much of spending went to delivery fees or whether delivery cost is high.\nUse this metric when the user asks about delivery fee ratio."
+              },
+              {
+                "type": "metric",
+                "name": "average_order_value",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value"
+                ],
+                "score": 0.2236,
+                "text": "Semantic object type: metric\nMetric name: average_order_value\nReadable name: average order value\nDescription: Average spend per order, calculated as total spend divided by order count. Use when users ask about average basket size, average order value, average spend, or typical order amount.\nUse this metric when the user asks about average order value."
+              },
+              {
+                "type": "metric",
+                "name": "discount_ratio",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "discount_ratio"
+                ],
+                "score": 0.2071,
+                "text": "Semantic object type: metric\nMetric name: discount_ratio\nReadable name: discount ratio\nDescription: Share of total spend offset by discounts, promotions, vouchers, or credits. Use when users ask about discount rate, savings rate, or promotion impact.\nUse this metric when the user asks about discount ratio."
+              },
+              {
+                "type": "metric",
+                "name": "tip_ratio",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "tip_ratio"
+                ],
+                "score": 0.205,
+                "text": "Semantic object type: metric\nMetric name: tip_ratio\nReadable name: tip ratio\nDescription: Share of total spend represented by tips. Use when users ask about tipping rate or what percentage of spend went to tips.\nUse this metric when the user asks about tip ratio."
+              },
+              {
+                "type": "metric",
+                "name": "refund_ratio",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "refund_ratio"
+                ],
+                "score": 0.1914,
+                "text": "Semantic object type: metric\nMetric name: refund_ratio\nReadable name: refund ratio\nDescription: Share of total spend refunded back. Use when users ask about refund rate, refund percentage, problem orders, or money returned.\nUse this metric when the user asks about refund ratio."
+              }
+            ]
+          }
+        },
+        {
+          "tool": "list_dimensions",
+          "arguments": {
+            "metric_name": "total_spend"
+          },
+          "output": [
+            "merchant__first_order_date",
+            "merchant__last_order_date",
+            "merchant__merchant_legal_name",
+            "merchant__merchant_name",
+            "merchant__source_platform",
+            "metric_time",
+            "order__career_stage",
+            "order__contains_alcohol",
+            "order__contains_convenience_items",
+            "order__contains_grocery",
+            "order__contains_pharmacy",
+            "order__contains_restaurant_food",
+            "order__country_or_market",
+            "order__currency",
+            "order__day_of_week",
+            "order__hour_of_day",
+            "order__merchant_name",
+            "order__order_category",
+            "order__order_date",
+            "order__order_type",
+            "order__payment_method",
+            "order__residence_city",
+            "order__source_platform",
+            "order__week_of_month"
+          ]
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "total_spend"
+            ],
+            "group_by": [
+              "order__residence_city"
+            ]
+          },
+          "output": {
+            "success": true,
+            "plan": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__residence_city"
+              ],
+              "filters": []
+            },
+            "metricflow_command": "mf query --metrics total_spend --group-by order__residence_city",
+            "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.24 seconds\norder__residence_city      total_spend\n-----------------------  -------------\nBerlin                           83.25\n\n",
+            "error": null,
+            "data": [
+              {
+                "order__residence_city": "Berlin",
+                "total_spend": 83.25
+              }
+            ],
+            "columns": [
+              "order__residence_city",
+              "total_spend"
+            ]
+          }
+        }
+      ],
+      "execution_trace": {
+        "started_at": "2026-06-27T11:51:21",
+        "finished_at": "2026-06-27T11:51:47",
+        "question": "Show spend by city.",
+        "conversation_history_used": [],
+        "final_answer": "The total spend by city shows Berlin with a total spend of 83.25. If you want spend data for other cities or a broader list, please let me know.",
+        "steps": [
+          {
+            "step_number": 1,
+            "tool_name": "search_semantic_layer",
+            "arguments": {
+              "query": "spend by city",
+              "object_type": "metric"
+            },
+            "output": {
+              "query": "spend by city",
+              "object_type": "metric",
+              "metric_name": null,
+              "matches": [
+                {
+                  "type": "metric",
+                  "name": "total_spend",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4144,
+                  "text": "Semantic object type: metric\nMetric name: total_spend\nReadable name: total spend\nDescription: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nUse this metric when the user asks about total spend."
+                },
+                {
+                  "type": "metric",
+                  "name": "merchant_lifetime_spend",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "merchant_lifetime_spend"
+                  ],
+                  "score": 0.3355,
+                  "text": "Semantic object type: metric\nMetric name: merchant_lifetime_spend\nReadable name: merchant lifetime spend\nDescription: \nUse this metric when the user asks about merchant lifetime spend."
+                },
+                {
+                  "type": "metric",
+                  "name": "items_total",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "items_total"
+                  ],
+                  "score": 0.2435,
+                  "text": "Semantic object type: metric\nMetric name: items_total\nReadable name: items total\nDescription: Total value of ordered items before fees, delivery charges, tips, discounts, and refunds. Use when users ask about food/item/product spend excluding extra charges.\nUse this metric when the user asks about items total."
+                },
+                {
+                  "type": "metric",
+                  "name": "delivery_fee_ratio",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "delivery_fee_ratio"
+                  ],
+                  "score": 0.2237,
+                  "text": "Semantic object type: metric\nMetric name: delivery_fee_ratio\nReadable name: delivery fee ratio\nDescription: Share of total spend represented by delivery charges. Use when users ask how much of spending went to delivery fees or whether delivery cost is high.\nUse this metric when the user asks about delivery fee ratio."
+                },
+                {
+                  "type": "metric",
+                  "name": "average_order_value",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value"
+                  ],
+                  "score": 0.2236,
+                  "text": "Semantic object type: metric\nMetric name: average_order_value\nReadable name: average order value\nDescription: Average spend per order, calculated as total spend divided by order count. Use when users ask about average basket size, average order value, average spend, or typical order amount.\nUse this metric when the user asks about average order value."
+                },
+                {
+                  "type": "metric",
+                  "name": "discount_ratio",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "discount_ratio"
+                  ],
+                  "score": 0.2071,
+                  "text": "Semantic object type: metric\nMetric name: discount_ratio\nReadable name: discount ratio\nDescription: Share of total spend offset by discounts, promotions, vouchers, or credits. Use when users ask about discount rate, savings rate, or promotion impact.\nUse this metric when the user asks about discount ratio."
+                },
+                {
+                  "type": "metric",
+                  "name": "tip_ratio",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "tip_ratio"
+                  ],
+                  "score": 0.205,
+                  "text": "Semantic object type: metric\nMetric name: tip_ratio\nReadable name: tip ratio\nDescription: Share of total spend represented by tips. Use when users ask about tipping rate or what percentage of spend went to tips.\nUse this metric when the user asks about tip ratio."
+                },
+                {
+                  "type": "metric",
+                  "name": "refund_ratio",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "refund_ratio"
+                  ],
+                  "score": 0.1914,
+                  "text": "Semantic object type: metric\nMetric name: refund_ratio\nReadable name: refund ratio\nDescription: Share of total spend refunded back. Use when users ask about refund rate, refund percentage, problem orders, or money returned.\nUse this metric when the user asks about refund ratio."
+                }
+              ]
+            },
+            "duration_ms": 658.6
+          },
+          {
+            "step_number": 2,
+            "tool_name": "list_dimensions",
+            "arguments": {
+              "metric_name": "total_spend"
+            },
+            "output": [
+              "merchant__first_order_date",
+              "merchant__last_order_date",
+              "merchant__merchant_legal_name",
+              "merchant__merchant_name",
+              "merchant__source_platform",
+              "metric_time",
+              "order__career_stage",
+              "order__contains_alcohol",
+              "order__contains_convenience_items",
+              "order__contains_grocery",
+              "order__contains_pharmacy",
+              "order__contains_restaurant_food",
+              "order__country_or_market",
+              "order__currency",
+              "order__day_of_week",
+              "order__hour_of_day",
+              "order__merchant_name",
+              "order__order_category",
+              "order__order_date",
+              "order__order_type",
+              "order__payment_method",
+              "order__residence_city",
+              "order__source_platform",
+              "order__week_of_month"
+            ],
+            "duration_ms": 0.02
+          },
+          {
+            "step_number": 3,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__residence_city"
+              ]
+            },
+            "output": {
+              "success": true,
+              "plan": {
+                "metrics": [
+                  "total_spend"
+                ],
+                "group_by": [
+                  "order__residence_city"
+                ],
+                "filters": []
+              },
+              "metricflow_command": "mf query --metrics total_spend --group-by order__residence_city",
+              "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.24 seconds\norder__residence_city      total_spend\n-----------------------  -------------\nBerlin                           83.25\n\n",
+              "error": null,
+              "data": [
+                {
+                  "order__residence_city": "Berlin",
+                  "total_spend": 83.25
+                }
+              ],
+              "columns": [
+                "order__residence_city",
+                "total_spend"
+              ]
+            },
+            "duration_ms": 15831.07
+          }
+        ],
+        "status": "success",
+        "error": null
+      }
+    },
+    {
+      "id": "orders_berlin_alcohol",
+      "question": "How many orders did I have in Berlin with alcohol?",
+      "passed": true,
+      "checks": [
+        {
+          "check": "expected_tools",
+          "passed": true,
+          "message": "Expected tools used."
+        },
+        {
+          "check": "metricflow_success",
+          "passed": true,
+          "message": "MetricFlow succeeded."
+        },
+        {
+          "check": "expected_metrics",
+          "passed": true,
+          "message": "Expected metrics found."
+        },
+        {
+          "check": "expected_group_by",
+          "passed": true,
+          "message": "Expected group_by found."
+        },
+        {
+          "check": "expected_filters",
+          "passed": true,
+          "message": "Expected filters found."
+        }
+      ],
+      "answer": "You had 3 orders in Berlin that contained alcohol.",
+      "plans": [
+        {
+          "metrics": [
+            "order_count"
+          ],
+          "group_by": [],
+          "filters": [
+            {
+              "dimension": "order__residence_city",
+              "operator": "=",
+              "value": "Berlin"
+            },
+            {
+              "dimension": "order__contains_alcohol",
+              "operator": "=",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "tool_results": [
+        {
+          "tool": "search_semantic_layer",
+          "arguments": {
+            "query": "orders with alcohol"
+          },
+          "output": {
+            "query": "orders with alcohol",
+            "object_type": null,
+            "metric_name": null,
+            "matches": [
+              {
+                "type": "dimension",
+                "name": "order__contains_alcohol",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value",
+                  "delivery_fee_ratio",
+                  "delivery_total",
+                  "discount_ratio",
+                  "discount_total",
+                  "fees_total",
+                  "items_total",
+                  "order_count",
+                  "refund_ratio",
+                  "refund_total",
+                  "tip_ratio",
+                  "tip_total",
+                  "total_spend"
+                ],
+                "score": 0.3947,
+                "text": "Semantic object type: dimension\nDimension name: order__contains_alcohol\nReadable name: order contains alcohol\nDescription: \nUse this dimension when the user asks about order contains alcohol."
+              },
+              {
+                "type": "relationship",
+                "name": "order_count::order__contains_alcohol",
+                "metric": "order_count",
+                "dimension": "order__contains_alcohol",
+                "metrics": [
+                  "order_count"
+                ],
+                "score": 0.3688,
+                "text": "Semantic object type: relationship\nMetric order_count can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: order count\nMetric description: Number of distinct food delivery orders. Use when users ask how many orders, purchases, deliveries, or transactions they had.\nReadable dimension: order contains alcohol\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "items_total::order__contains_alcohol",
+                "metric": "items_total",
+                "dimension": "order__contains_alcohol",
+                "metrics": [
+                  "items_total"
+                ],
+                "score": 0.3624,
+                "text": "Semantic object type: relationship\nMetric items_total can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: items total\nMetric description: Total value of ordered items before fees, delivery charges, tips, discounts, and refunds. Use when users ask about food/item/product spend excluding extra charges.\nReadable dimension: order contains alcohol\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "discount_total::order__contains_alcohol",
+                "metric": "discount_total",
+                "dimension": "order__contains_alcohol",
+                "metrics": [
+                  "discount_total"
+                ],
+                "score": 0.357,
+                "text": "Semantic object type: relationship\nMetric discount_total can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: discount total\nMetric description: Total discounts, promotions, vouchers, and credits applied to orders. Use when users ask about savings, discounts, offers, vouchers, or promotions.\nReadable dimension: order contains alcohol\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "average_order_value::order__contains_alcohol",
+                "metric": "average_order_value",
+                "dimension": "order__contains_alcohol",
+                "metrics": [
+                  "average_order_value"
+                ],
+                "score": 0.3564,
+                "text": "Semantic object type: relationship\nMetric average_order_value can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: average order value\nMetric description: Average spend per order, calculated as total spend divided by order count. Use when users ask about average basket size, average order value, average spend, or typical order amount.\nReadable dimension: order contains alcohol\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "delivery_total::order__contains_alcohol",
+                "metric": "delivery_total",
+                "dimension": "order__contains_alcohol",
+                "metrics": [
+                  "delivery_total"
+                ],
+                "score": 0.3385,
+                "text": "Semantic object type: relationship\nMetric delivery_total can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: delivery total\nMetric description: Total delivery charges paid across orders. Use when users ask about delivery fees, delivery cost, courier charges, or shipping-like charges.\nReadable dimension: order contains alcohol\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "discount_ratio::order__contains_alcohol",
+                "metric": "discount_ratio",
+                "dimension": "order__contains_alcohol",
+                "metrics": [
+                  "discount_ratio"
+                ],
+                "score": 0.3351,
+                "text": "Semantic object type: relationship\nMetric discount_ratio can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: discount ratio\nMetric description: Share of total spend offset by discounts, promotions, vouchers, or credits. Use when users ask about discount rate, savings rate, or promotion impact.\nReadable dimension: order contains alcohol\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::order__contains_alcohol",
+                "metric": "total_spend",
+                "dimension": "order__contains_alcohol",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.3286,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order contains alcohol\nDimension description:"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "find_similar_dimensions",
+          "arguments": {
+            "user_term": "city"
+          },
+          "output": {
+            "user_term": "city",
+            "matches": [
+              "order__residence_city"
+            ],
+            "method": "alias"
+          }
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "order_count"
+            ],
+            "filters": [
+              {
+                "dimension": "order__residence_city",
+                "operator": "=",
+                "value": "Berlin"
+              },
+              {
+                "dimension": "order__contains_alcohol",
+                "operator": "=",
+                "value": true
+              }
+            ]
+          },
+          "output": {
+            "success": true,
+            "plan": {
+              "metrics": [
+                "order_count"
+              ],
+              "group_by": [],
+              "filters": [
+                {
+                  "dimension": "order__residence_city",
+                  "operator": "=",
+                  "value": "Berlin"
+                },
+                {
+                  "dimension": "order__contains_alcohol",
+                  "operator": "=",
+                  "value": true
+                }
+              ]
+            },
+            "metricflow_command": "mf query --metrics order_count --where {{ Dimension('order__residence_city') }} = 'Berlin' and {{ Dimension('order__contains_alcohol') }} = true",
+            "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.31 seconds\n  order_count\n-------------\n            3\n\n",
+            "error": null,
+            "data": [
+              {
+                "order_count": 3
+              }
+            ],
+            "columns": [
+              "order_count"
+            ]
+          }
+        }
+      ],
+      "execution_trace": {
+        "started_at": "2026-06-27T11:51:47",
+        "finished_at": "2026-06-27T11:52:03",
+        "question": "How many orders did I have in Berlin with alcohol?",
+        "conversation_history_used": [],
+        "final_answer": "You had 3 orders in Berlin that contained alcohol.",
+        "steps": [
+          {
+            "step_number": 1,
+            "tool_name": "search_semantic_layer",
+            "arguments": {
+              "query": "orders with alcohol"
+            },
+            "output": {
+              "query": "orders with alcohol",
+              "object_type": null,
+              "metric_name": null,
+              "matches": [
+                {
+                  "type": "dimension",
+                  "name": "order__contains_alcohol",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value",
+                    "delivery_fee_ratio",
+                    "delivery_total",
+                    "discount_ratio",
+                    "discount_total",
+                    "fees_total",
+                    "items_total",
+                    "order_count",
+                    "refund_ratio",
+                    "refund_total",
+                    "tip_ratio",
+                    "tip_total",
+                    "total_spend"
+                  ],
+                  "score": 0.3947,
+                  "text": "Semantic object type: dimension\nDimension name: order__contains_alcohol\nReadable name: order contains alcohol\nDescription: \nUse this dimension when the user asks about order contains alcohol."
+                },
+                {
+                  "type": "relationship",
+                  "name": "order_count::order__contains_alcohol",
+                  "metric": "order_count",
+                  "dimension": "order__contains_alcohol",
+                  "metrics": [
+                    "order_count"
+                  ],
+                  "score": 0.3688,
+                  "text": "Semantic object type: relationship\nMetric order_count can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: order count\nMetric description: Number of distinct food delivery orders. Use when users ask how many orders, purchases, deliveries, or transactions they had.\nReadable dimension: order contains alcohol\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "items_total::order__contains_alcohol",
+                  "metric": "items_total",
+                  "dimension": "order__contains_alcohol",
+                  "metrics": [
+                    "items_total"
+                  ],
+                  "score": 0.3624,
+                  "text": "Semantic object type: relationship\nMetric items_total can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: items total\nMetric description: Total value of ordered items before fees, delivery charges, tips, discounts, and refunds. Use when users ask about food/item/product spend excluding extra charges.\nReadable dimension: order contains alcohol\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "discount_total::order__contains_alcohol",
+                  "metric": "discount_total",
+                  "dimension": "order__contains_alcohol",
+                  "metrics": [
+                    "discount_total"
+                  ],
+                  "score": 0.357,
+                  "text": "Semantic object type: relationship\nMetric discount_total can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: discount total\nMetric description: Total discounts, promotions, vouchers, and credits applied to orders. Use when users ask about savings, discounts, offers, vouchers, or promotions.\nReadable dimension: order contains alcohol\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "average_order_value::order__contains_alcohol",
+                  "metric": "average_order_value",
+                  "dimension": "order__contains_alcohol",
+                  "metrics": [
+                    "average_order_value"
+                  ],
+                  "score": 0.3564,
+                  "text": "Semantic object type: relationship\nMetric average_order_value can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: average order value\nMetric description: Average spend per order, calculated as total spend divided by order count. Use when users ask about average basket size, average order value, average spend, or typical order amount.\nReadable dimension: order contains alcohol\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "delivery_total::order__contains_alcohol",
+                  "metric": "delivery_total",
+                  "dimension": "order__contains_alcohol",
+                  "metrics": [
+                    "delivery_total"
+                  ],
+                  "score": 0.3385,
+                  "text": "Semantic object type: relationship\nMetric delivery_total can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: delivery total\nMetric description: Total delivery charges paid across orders. Use when users ask about delivery fees, delivery cost, courier charges, or shipping-like charges.\nReadable dimension: order contains alcohol\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "discount_ratio::order__contains_alcohol",
+                  "metric": "discount_ratio",
+                  "dimension": "order__contains_alcohol",
+                  "metrics": [
+                    "discount_ratio"
+                  ],
+                  "score": 0.3351,
+                  "text": "Semantic object type: relationship\nMetric discount_ratio can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: discount ratio\nMetric description: Share of total spend offset by discounts, promotions, vouchers, or credits. Use when users ask about discount rate, savings rate, or promotion impact.\nReadable dimension: order contains alcohol\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__contains_alcohol",
+                  "metric": "total_spend",
+                  "dimension": "order__contains_alcohol",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.3286,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__contains_alcohol.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order contains alcohol\nDimension description:"
+                }
+              ]
+            },
+            "duration_ms": 1653.25
+          },
+          {
+            "step_number": 2,
+            "tool_name": "find_similar_dimensions",
+            "arguments": {
+              "user_term": "city"
+            },
+            "output": {
+              "user_term": "city",
+              "matches": [
+                "order__residence_city"
+              ],
+              "method": "alias"
+            },
+            "duration_ms": 0.06
+          },
+          {
+            "step_number": 3,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "order_count"
+              ],
+              "filters": [
+                {
+                  "dimension": "order__residence_city",
+                  "operator": "=",
+                  "value": "Berlin"
+                },
+                {
+                  "dimension": "order__contains_alcohol",
+                  "operator": "=",
+                  "value": true
+                }
+              ]
+            },
+            "output": {
+              "success": true,
+              "plan": {
+                "metrics": [
+                  "order_count"
+                ],
+                "group_by": [],
+                "filters": [
+                  {
+                    "dimension": "order__residence_city",
+                    "operator": "=",
+                    "value": "Berlin"
+                  },
+                  {
+                    "dimension": "order__contains_alcohol",
+                    "operator": "=",
+                    "value": true
+                  }
+                ]
+              },
+              "metricflow_command": "mf query --metrics order_count --where {{ Dimension('order__residence_city') }} = 'Berlin' and {{ Dimension('order__contains_alcohol') }} = true",
+              "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.31 seconds\n  order_count\n-------------\n            3\n\n",
+              "error": null,
+              "data": [
+                {
+                  "order_count": 3
+                }
+              ],
+              "columns": [
+                "order_count"
+              ]
+            },
+            "duration_ms": 6247.67
+          }
+        ],
+        "status": "success",
+        "error": null
+      }
+    },
+    {
+      "id": "grocery_orders",
+      "question": "How many orders included grocery?",
+      "passed": true,
+      "checks": [
+        {
+          "check": "expected_tools",
+          "passed": true,
+          "message": "Expected tools used."
+        },
+        {
+          "check": "metricflow_success",
+          "passed": true,
+          "message": "MetricFlow succeeded."
+        },
+        {
+          "check": "expected_metrics",
+          "passed": true,
+          "message": "Expected metrics found."
+        },
+        {
+          "check": "expected_group_by",
+          "passed": true,
+          "message": "Expected group_by found."
+        },
+        {
+          "check": "expected_filters",
+          "passed": true,
+          "message": "Expected filters found."
+        }
+      ],
+      "answer": "There were no orders that included grocery items.",
+      "plans": [
+        {
+          "metrics": [
+            "order_count"
+          ],
+          "group_by": [],
+          "filters": [
+            {
+              "dimension": "order__contains_grocery",
+              "operator": "=",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "tool_results": [
+        {
+          "tool": "search_semantic_layer",
+          "arguments": {
+            "query": "orders including grocery",
+            "object_type": "metric"
+          },
+          "output": {
+            "query": "orders including grocery",
+            "object_type": "metric",
+            "metric_name": null,
+            "matches": [
+              {
+                "type": "metric",
+                "name": "order_count",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "order_count"
+                ],
+                "score": 0.3243,
+                "text": "Semantic object type: metric\nMetric name: order_count\nReadable name: order count\nDescription: Number of distinct food delivery orders. Use when users ask how many orders, purchases, deliveries, or transactions they had.\nUse this metric when the user asks about order count."
+              },
+              {
+                "type": "metric",
+                "name": "merchant_total_orders",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "merchant_total_orders"
+                ],
+                "score": 0.2922,
+                "text": "Semantic object type: metric\nMetric name: merchant_total_orders\nReadable name: merchant total orders\nDescription: \nUse this metric when the user asks about merchant total orders."
+              },
+              {
+                "type": "metric",
+                "name": "items_total",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "items_total"
+                ],
+                "score": 0.2853,
+                "text": "Semantic object type: metric\nMetric name: items_total\nReadable name: items total\nDescription: Total value of ordered items before fees, delivery charges, tips, discounts, and refunds. Use when users ask about food/item/product spend excluding extra charges.\nUse this metric when the user asks about items total."
+              },
+              {
+                "type": "metric",
+                "name": "delivery_total",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "delivery_total"
+                ],
+                "score": 0.26,
+                "text": "Semantic object type: metric\nMetric name: delivery_total\nReadable name: delivery total\nDescription: Total delivery charges paid across orders. Use when users ask about delivery fees, delivery cost, courier charges, or shipping-like charges.\nUse this metric when the user asks about delivery total."
+              },
+              {
+                "type": "metric",
+                "name": "total_spend",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.2598,
+                "text": "Semantic object type: metric\nMetric name: total_spend\nReadable name: total spend\nDescription: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nUse this metric when the user asks about total spend."
+              },
+              {
+                "type": "metric",
+                "name": "merchant_average_order_value",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "merchant_average_order_value"
+                ],
+                "score": 0.2573,
+                "text": "Semantic object type: metric\nMetric name: merchant_average_order_value\nReadable name: merchant average order value\nDescription: \nUse this metric when the user asks about merchant average order value."
+              },
+              {
+                "type": "metric",
+                "name": "discount_total",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "discount_total"
+                ],
+                "score": 0.2512,
+                "text": "Semantic object type: metric\nMetric name: discount_total\nReadable name: discount total\nDescription: Total discounts, promotions, vouchers, and credits applied to orders. Use when users ask about savings, discounts, offers, vouchers, or promotions.\nUse this metric when the user asks about discount total."
+              },
+              {
+                "type": "metric",
+                "name": "average_order_value",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value"
+                ],
+                "score": 0.2509,
+                "text": "Semantic object type: metric\nMetric name: average_order_value\nReadable name: average order value\nDescription: Average spend per order, calculated as total spend divided by order count. Use when users ask about average basket size, average order value, average spend, or typical order amount.\nUse this metric when the user asks about average order value."
+              }
+            ]
+          }
+        },
+        {
+          "tool": "find_similar_dimensions",
+          "arguments": {
+            "user_term": "grocery"
+          },
+          "output": {
+            "user_term": "grocery",
+            "matches": [
+              "order__contains_grocery"
+            ],
+            "method": "fuzzy"
+          }
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "order_count"
+            ],
+            "filters": [
+              {
+                "dimension": "order__contains_grocery",
+                "operator": "=",
+                "value": true
+              }
+            ]
+          },
+          "output": {
+            "success": true,
+            "plan": {
+              "metrics": [
+                "order_count"
+              ],
+              "group_by": [],
+              "filters": [
+                {
+                  "dimension": "order__contains_grocery",
+                  "operator": "=",
+                  "value": true
+                }
+              ]
+            },
+            "metricflow_command": "mf query --metrics order_count --where {{ Dimension('order__contains_grocery') }} = true",
+            "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.24 seconds\n  order_count\n-------------\n            0\n\n",
+            "error": null,
+            "data": [
+              {
+                "order_count": 0
+              }
+            ],
+            "columns": [
+              "order_count"
+            ]
+          }
+        }
+      ],
+      "execution_trace": {
+        "started_at": "2026-06-27T11:52:03",
+        "finished_at": "2026-06-27T11:52:17",
+        "question": "How many orders included grocery?",
+        "conversation_history_used": [],
+        "final_answer": "There were no orders that included grocery items.",
+        "steps": [
+          {
+            "step_number": 1,
+            "tool_name": "search_semantic_layer",
+            "arguments": {
+              "query": "orders including grocery",
+              "object_type": "metric"
+            },
+            "output": {
+              "query": "orders including grocery",
+              "object_type": "metric",
+              "metric_name": null,
+              "matches": [
+                {
+                  "type": "metric",
+                  "name": "order_count",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "order_count"
+                  ],
+                  "score": 0.3243,
+                  "text": "Semantic object type: metric\nMetric name: order_count\nReadable name: order count\nDescription: Number of distinct food delivery orders. Use when users ask how many orders, purchases, deliveries, or transactions they had.\nUse this metric when the user asks about order count."
+                },
+                {
+                  "type": "metric",
+                  "name": "merchant_total_orders",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "merchant_total_orders"
+                  ],
+                  "score": 0.2922,
+                  "text": "Semantic object type: metric\nMetric name: merchant_total_orders\nReadable name: merchant total orders\nDescription: \nUse this metric when the user asks about merchant total orders."
+                },
+                {
+                  "type": "metric",
+                  "name": "items_total",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "items_total"
+                  ],
+                  "score": 0.2853,
+                  "text": "Semantic object type: metric\nMetric name: items_total\nReadable name: items total\nDescription: Total value of ordered items before fees, delivery charges, tips, discounts, and refunds. Use when users ask about food/item/product spend excluding extra charges.\nUse this metric when the user asks about items total."
+                },
+                {
+                  "type": "metric",
+                  "name": "delivery_total",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "delivery_total"
+                  ],
+                  "score": 0.26,
+                  "text": "Semantic object type: metric\nMetric name: delivery_total\nReadable name: delivery total\nDescription: Total delivery charges paid across orders. Use when users ask about delivery fees, delivery cost, courier charges, or shipping-like charges.\nUse this metric when the user asks about delivery total."
+                },
+                {
+                  "type": "metric",
+                  "name": "total_spend",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.2598,
+                  "text": "Semantic object type: metric\nMetric name: total_spend\nReadable name: total spend\nDescription: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nUse this metric when the user asks about total spend."
+                },
+                {
+                  "type": "metric",
+                  "name": "merchant_average_order_value",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "merchant_average_order_value"
+                  ],
+                  "score": 0.2573,
+                  "text": "Semantic object type: metric\nMetric name: merchant_average_order_value\nReadable name: merchant average order value\nDescription: \nUse this metric when the user asks about merchant average order value."
+                },
+                {
+                  "type": "metric",
+                  "name": "discount_total",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "discount_total"
+                  ],
+                  "score": 0.2512,
+                  "text": "Semantic object type: metric\nMetric name: discount_total\nReadable name: discount total\nDescription: Total discounts, promotions, vouchers, and credits applied to orders. Use when users ask about savings, discounts, offers, vouchers, or promotions.\nUse this metric when the user asks about discount total."
+                },
+                {
+                  "type": "metric",
+                  "name": "average_order_value",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value"
+                  ],
+                  "score": 0.2509,
+                  "text": "Semantic object type: metric\nMetric name: average_order_value\nReadable name: average order value\nDescription: Average spend per order, calculated as total spend divided by order count. Use when users ask about average basket size, average order value, average spend, or typical order amount.\nUse this metric when the user asks about average order value."
+                }
+              ]
+            },
+            "duration_ms": 650.04
+          },
+          {
+            "step_number": 2,
+            "tool_name": "find_similar_dimensions",
+            "arguments": {
+              "user_term": "grocery"
+            },
+            "output": {
+              "user_term": "grocery",
+              "matches": [
+                "order__contains_grocery"
+              ],
+              "method": "fuzzy"
+            },
+            "duration_ms": 0.33
+          },
+          {
+            "step_number": 3,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "order_count"
+              ],
+              "filters": [
+                {
+                  "dimension": "order__contains_grocery",
+                  "operator": "=",
+                  "value": true
+                }
+              ]
+            },
+            "output": {
+              "success": true,
+              "plan": {
+                "metrics": [
+                  "order_count"
+                ],
+                "group_by": [],
+                "filters": [
+                  {
+                    "dimension": "order__contains_grocery",
+                    "operator": "=",
+                    "value": true
+                  }
+                ]
+              },
+              "metricflow_command": "mf query --metrics order_count --where {{ Dimension('order__contains_grocery') }} = true",
+              "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.24 seconds\n  order_count\n-------------\n            0\n\n",
+              "error": null,
+              "data": [
+                {
+                  "order_count": 0
+                }
+              ],
+              "columns": [
+                "order_count"
+              ]
+            },
+            "duration_ms": 5849.41
+          }
+        ],
+        "status": "success",
+        "error": null
+      }
+    },
+    {
+      "id": "monthly_spend_trend",
+      "question": "What was my monthly spend trend?",
+      "passed": false,
+      "checks": [
+        {
+          "check": "expected_tools",
+          "passed": true,
+          "message": "Expected tools used."
+        },
+        {
+          "check": "metricflow_success",
+          "passed": false,
+          "message": "MetricFlow failed: ['Invalid filter operator: gte', 'Invalid filter operator: gte', 'Invalid filter operator: between']"
+        },
+        {
+          "check": "expected_metrics",
+          "passed": true,
+          "message": "Expected metrics found."
+        },
+        {
+          "check": "expected_group_by",
+          "passed": true,
+          "message": "At least one expected group_by option found."
+        },
+        {
+          "check": "expected_filters",
+          "passed": true,
+          "message": "No filter expectation."
+        }
+      ],
+      "answer": "Your spend data is available for specific days, not aggregated monthly. Here are some spend values on those days:\n- 2025-10-03: 13.49\n- 2025-11-24: 13.20\n- 2026-04-15: 18.22\n- 2026-04-17: 24.25\n- 2026-05-24: 14.09\n\nIf you want, I can help summarize or analyze this data further.",
+      "plans": [
+        {
+          "metrics": [
+            "total_spend"
+          ],
+          "group_by": [
+            "metric_time"
+          ],
+          "filters": []
+        },
+        {
+          "metrics": [
+            "total_spend"
+          ],
+          "group_by": [
+            "order__order_date"
+          ],
+          "filters": []
+        },
+        {
+          "metrics": [
+            "total_spend"
+          ],
+          "group_by": [
+            "order__order_date"
+          ],
+          "filters": []
+        }
+      ],
+      "tool_results": [
+        {
+          "tool": "search_semantic_layer",
+          "arguments": {
+            "query": "monthly spend trend"
+          },
+          "output": {
+            "query": "monthly spend trend",
+            "object_type": null,
+            "metric_name": null,
+            "matches": [
+              {
+                "type": "relationship",
+                "name": "total_spend::order__week_of_month",
+                "metric": "total_spend",
+                "dimension": "order__week_of_month",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4322,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__week_of_month.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order week of month\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::order__residence_city",
+                "metric": "total_spend",
+                "dimension": "order__residence_city",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4162,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__residence_city.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order residence city\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::order__career_stage",
+                "metric": "total_spend",
+                "dimension": "order__career_stage",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4139,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__career_stage.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order career stage\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::order__day_of_week",
+                "metric": "total_spend",
+                "dimension": "order__day_of_week",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4125,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__day_of_week.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order day of week\nDimension description:"
+              },
+              {
+                "type": "metric",
+                "name": "merchant_lifetime_spend",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "merchant_lifetime_spend"
+                ],
+                "score": 0.4109,
+                "text": "Semantic object type: metric\nMetric name: merchant_lifetime_spend\nReadable name: merchant lifetime spend\nDescription: \nUse this metric when the user asks about merchant lifetime spend."
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::order__payment_method",
+                "metric": "total_spend",
+                "dimension": "order__payment_method",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4047,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__payment_method.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order payment method\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::order__contains_convenience_items",
+                "metric": "total_spend",
+                "dimension": "order__contains_convenience_items",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4035,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__contains_convenience_items.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order contains convenience items\nDimension description:"
+              },
+              {
+                "type": "relationship",
+                "name": "total_spend::merchant__first_order_date",
+                "metric": "total_spend",
+                "dimension": "merchant__first_order_date",
+                "metrics": [
+                  "total_spend"
+                ],
+                "score": 0.4025,
+                "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension merchant__first_order_date.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: merchant first order date\nDimension description:"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "list_dimensions",
+          "arguments": {
+            "metric_name": "total_spend"
+          },
+          "output": [
+            "merchant__first_order_date",
+            "merchant__last_order_date",
+            "merchant__merchant_legal_name",
+            "merchant__merchant_name",
+            "merchant__source_platform",
+            "metric_time",
+            "order__career_stage",
+            "order__contains_alcohol",
+            "order__contains_convenience_items",
+            "order__contains_grocery",
+            "order__contains_pharmacy",
+            "order__contains_restaurant_food",
+            "order__country_or_market",
+            "order__currency",
+            "order__day_of_week",
+            "order__hour_of_day",
+            "order__merchant_name",
+            "order__order_category",
+            "order__order_date",
+            "order__order_type",
+            "order__payment_method",
+            "order__residence_city",
+            "order__source_platform",
+            "order__week_of_month"
+          ]
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "total_spend"
+            ],
+            "group_by": [
+              "metric_time"
+            ]
+          },
+          "output": {
+            "success": true,
+            "plan": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "metric_time"
+              ],
+              "filters": []
+            },
+            "metricflow_command": "mf query --metrics total_spend --group-by metric_time",
+            "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.32 seconds\nmetric_time__day       total_spend\n-------------------  -------------\n2026-04-15T00:00:00          18.22\n2025-10-03T00:00:00          13.49\n2026-04-17T00:00:00          24.25\n2025-11-24T00:00:00          13.2\n2026-05-24T00:00:00          14.09\n\n",
+            "error": null,
+            "data": [
+              {
+                "metric_time__day": "2026-04-15T00:00:00",
+                "total_spend": 18.22
+              },
+              {
+                "metric_time__day": "2025-10-03T00:00:00",
+                "total_spend": 13.49
+              },
+              {
+                "metric_time__day": "2026-04-17T00:00:00",
+                "total_spend": 24.25
+              },
+              {
+                "metric_time__day": "2025-11-24T00:00:00",
+                "total_spend": 13.2
+              },
+              {
+                "metric_time__day": "2026-05-24T00:00:00",
+                "total_spend": 14.09
+              }
+            ],
+            "columns": [
+              "metric_time__day",
+              "total_spend"
+            ]
+          }
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "total_spend"
+            ],
+            "group_by": [
+              "metric_time"
+            ],
+            "filters": [
+              {
+                "dimension": "metric_time",
+                "operator": "gte",
+                "value": "2025-01-01T00:00:00"
+              }
+            ]
+          },
+          "output": {
+            "success": false,
+            "error": "Invalid filter operator: gte",
+            "failed_plan": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "metric_time"
+              ],
+              "filters": [
+                {
+                  "dimension": "metric_time",
+                  "operator": "gte",
+                  "value": "2025-01-01T00:00:00"
+                }
+              ]
+            },
+            "valid_metrics": [
+              "average_order_value",
+              "delivery_fee_ratio",
+              "delivery_total",
+              "discount_ratio",
+              "discount_total",
+              "fees_total",
+              "items_total",
+              "merchant_average_order_value",
+              "merchant_count",
+              "merchant_lifetime_spend",
+              "merchant_total_orders",
+              "order_count",
+              "refund_ratio",
+              "refund_total",
+              "tip_ratio",
+              "tip_total",
+              "total_spend"
+            ],
+            "valid_dimensions_for_selected_metrics": [
+              "merchant__first_order_date",
+              "merchant__last_order_date",
+              "merchant__merchant_legal_name",
+              "merchant__merchant_name",
+              "merchant__source_platform",
+              "metric_time",
+              "order__career_stage",
+              "order__contains_alcohol",
+              "order__contains_convenience_items",
+              "order__contains_grocery",
+              "order__contains_pharmacy",
+              "order__contains_restaurant_food",
+              "order__country_or_market",
+              "order__currency",
+              "order__day_of_week",
+              "order__hour_of_day",
+              "order__merchant_name",
+              "order__order_category",
+              "order__order_date",
+              "order__order_type",
+              "order__payment_method",
+              "order__residence_city",
+              "order__source_platform",
+              "order__week_of_month"
+            ],
+            "instruction": "Correct the failed query by using only valid metrics and dimensions. If the user asked for an unavailable dimension, choose the closest valid dimension or explain that it is unavailable."
+          }
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "total_spend"
+            ],
+            "group_by": [
+              "order__order_date"
+            ]
+          },
+          "output": {
+            "success": true,
+            "plan": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__order_date"
+              ],
+              "filters": []
+            },
+            "metricflow_command": "mf query --metrics total_spend --group-by order__order_date",
+            "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.23 seconds\norder__order_date__day      total_spend\n------------------------  -------------\n2026-04-15T00:00:00               18.22\n2025-10-03T00:00:00               13.49\n2025-11-24T00:00:00               13.2\n2026-04-17T00:00:00               24.25\n2026-05-24T00:00:00               14.09\n\n",
+            "error": null,
+            "data": [
+              {
+                "order__order_date__day": "2026-04-15T00:00:00",
+                "total_spend": 18.22
+              },
+              {
+                "order__order_date__day": "2025-10-03T00:00:00",
+                "total_spend": 13.49
+              },
+              {
+                "order__order_date__day": "2025-11-24T00:00:00",
+                "total_spend": 13.2
+              },
+              {
+                "order__order_date__day": "2026-04-17T00:00:00",
+                "total_spend": 24.25
+              },
+              {
+                "order__order_date__day": "2026-05-24T00:00:00",
+                "total_spend": 14.09
+              }
+            ],
+            "columns": [
+              "order__order_date__day",
+              "total_spend"
+            ]
+          }
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "total_spend"
+            ],
+            "group_by": [
+              "order__order_date"
+            ],
+            "filters": [
+              {
+                "dimension": "order__order_date",
+                "operator": "gte",
+                "value": "2025-01-01"
+              }
+            ]
+          },
+          "output": {
+            "success": false,
+            "error": "Invalid filter operator: gte",
+            "failed_plan": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__order_date"
+              ],
+              "filters": [
+                {
+                  "dimension": "order__order_date",
+                  "operator": "gte",
+                  "value": "2025-01-01"
+                }
+              ]
+            },
+            "valid_metrics": [
+              "average_order_value",
+              "delivery_fee_ratio",
+              "delivery_total",
+              "discount_ratio",
+              "discount_total",
+              "fees_total",
+              "items_total",
+              "merchant_average_order_value",
+              "merchant_count",
+              "merchant_lifetime_spend",
+              "merchant_total_orders",
+              "order_count",
+              "refund_ratio",
+              "refund_total",
+              "tip_ratio",
+              "tip_total",
+              "total_spend"
+            ],
+            "valid_dimensions_for_selected_metrics": [
+              "merchant__first_order_date",
+              "merchant__last_order_date",
+              "merchant__merchant_legal_name",
+              "merchant__merchant_name",
+              "merchant__source_platform",
+              "metric_time",
+              "order__career_stage",
+              "order__contains_alcohol",
+              "order__contains_convenience_items",
+              "order__contains_grocery",
+              "order__contains_pharmacy",
+              "order__contains_restaurant_food",
+              "order__country_or_market",
+              "order__currency",
+              "order__day_of_week",
+              "order__hour_of_day",
+              "order__merchant_name",
+              "order__order_category",
+              "order__order_date",
+              "order__order_type",
+              "order__payment_method",
+              "order__residence_city",
+              "order__source_platform",
+              "order__week_of_month"
+            ],
+            "instruction": "Correct the failed query by using only valid metrics and dimensions. If the user asked for an unavailable dimension, choose the closest valid dimension or explain that it is unavailable."
+          }
+        },
+        {
+          "tool": "list_dimensions",
+          "arguments": {
+            "metric_name": "total_spend"
+          },
+          "output": [
+            "merchant__first_order_date",
+            "merchant__last_order_date",
+            "merchant__merchant_legal_name",
+            "merchant__merchant_name",
+            "merchant__source_platform",
+            "metric_time",
+            "order__career_stage",
+            "order__contains_alcohol",
+            "order__contains_convenience_items",
+            "order__contains_grocery",
+            "order__contains_pharmacy",
+            "order__contains_restaurant_food",
+            "order__country_or_market",
+            "order__currency",
+            "order__day_of_week",
+            "order__hour_of_day",
+            "order__merchant_name",
+            "order__order_category",
+            "order__order_date",
+            "order__order_type",
+            "order__payment_method",
+            "order__residence_city",
+            "order__source_platform",
+            "order__week_of_month"
+          ]
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "total_spend"
+            ],
+            "group_by": [
+              "order__order_date"
+            ],
+            "filters": [
+              {
+                "dimension": "order__order_date",
+                "operator": "between",
+                "value": [
+                  "2025-01-01",
+                  "2026-12-31"
+                ]
+              }
+            ]
+          },
+          "output": {
+            "success": false,
+            "error": "Invalid filter operator: between",
+            "failed_plan": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__order_date"
+              ],
+              "filters": [
+                {
+                  "dimension": "order__order_date",
+                  "operator": "between",
+                  "value": [
+                    "2025-01-01",
+                    "2026-12-31"
+                  ]
+                }
+              ]
+            },
+            "valid_metrics": [
+              "average_order_value",
+              "delivery_fee_ratio",
+              "delivery_total",
+              "discount_ratio",
+              "discount_total",
+              "fees_total",
+              "items_total",
+              "merchant_average_order_value",
+              "merchant_count",
+              "merchant_lifetime_spend",
+              "merchant_total_orders",
+              "order_count",
+              "refund_ratio",
+              "refund_total",
+              "tip_ratio",
+              "tip_total",
+              "total_spend"
+            ],
+            "valid_dimensions_for_selected_metrics": [
+              "merchant__first_order_date",
+              "merchant__last_order_date",
+              "merchant__merchant_legal_name",
+              "merchant__merchant_name",
+              "merchant__source_platform",
+              "metric_time",
+              "order__career_stage",
+              "order__contains_alcohol",
+              "order__contains_convenience_items",
+              "order__contains_grocery",
+              "order__contains_pharmacy",
+              "order__contains_restaurant_food",
+              "order__country_or_market",
+              "order__currency",
+              "order__day_of_week",
+              "order__hour_of_day",
+              "order__merchant_name",
+              "order__order_category",
+              "order__order_date",
+              "order__order_type",
+              "order__payment_method",
+              "order__residence_city",
+              "order__source_platform",
+              "order__week_of_month"
+            ],
+            "instruction": "Correct the failed query by using only valid metrics and dimensions. If the user asked for an unavailable dimension, choose the closest valid dimension or explain that it is unavailable."
+          }
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "total_spend"
+            ],
+            "group_by": [
+              "order__order_date"
+            ]
+          },
+          "output": {
+            "success": true,
+            "plan": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__order_date"
+              ],
+              "filters": []
+            },
+            "metricflow_command": "mf query --metrics total_spend --group-by order__order_date",
+            "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.23 seconds\norder__order_date__day      total_spend\n------------------------  -------------\n2026-04-15T00:00:00               18.22\n2025-10-03T00:00:00               13.49\n2026-05-24T00:00:00               14.09\n2025-11-24T00:00:00               13.2\n2026-04-17T00:00:00               24.25\n\n",
+            "error": null,
+            "data": [
+              {
+                "order__order_date__day": "2026-04-15T00:00:00",
+                "total_spend": 18.22
+              },
+              {
+                "order__order_date__day": "2025-10-03T00:00:00",
+                "total_spend": 13.49
+              },
+              {
+                "order__order_date__day": "2026-05-24T00:00:00",
+                "total_spend": 14.09
+              },
+              {
+                "order__order_date__day": "2025-11-24T00:00:00",
+                "total_spend": 13.2
+              },
+              {
+                "order__order_date__day": "2026-04-17T00:00:00",
+                "total_spend": 24.25
+              }
+            ],
+            "columns": [
+              "order__order_date__day",
+              "total_spend"
+            ]
+          }
+        }
+      ],
+      "execution_trace": {
+        "started_at": "2026-06-27T11:52:17",
+        "finished_at": "2026-06-27T11:53:02",
+        "question": "What was my monthly spend trend?",
+        "conversation_history_used": [],
+        "final_answer": "Your spend data is available for specific days, not aggregated monthly. Here are some spend values on those days:\n- 2025-10-03: 13.49\n- 2025-11-24: 13.20\n- 2026-04-15: 18.22\n- 2026-04-17: 24.25\n- 2026-05-24: 14.09\n\nIf you want, I can help summarize or analyze this data further.",
+        "steps": [
+          {
+            "step_number": 1,
+            "tool_name": "search_semantic_layer",
+            "arguments": {
+              "query": "monthly spend trend"
+            },
+            "output": {
+              "query": "monthly spend trend",
+              "object_type": null,
+              "metric_name": null,
+              "matches": [
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__week_of_month",
+                  "metric": "total_spend",
+                  "dimension": "order__week_of_month",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4322,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__week_of_month.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order week of month\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__residence_city",
+                  "metric": "total_spend",
+                  "dimension": "order__residence_city",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4162,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__residence_city.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order residence city\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__career_stage",
+                  "metric": "total_spend",
+                  "dimension": "order__career_stage",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4139,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__career_stage.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order career stage\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__day_of_week",
+                  "metric": "total_spend",
+                  "dimension": "order__day_of_week",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4125,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__day_of_week.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order day of week\nDimension description:"
+                },
+                {
+                  "type": "metric",
+                  "name": "merchant_lifetime_spend",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "merchant_lifetime_spend"
+                  ],
+                  "score": 0.4109,
+                  "text": "Semantic object type: metric\nMetric name: merchant_lifetime_spend\nReadable name: merchant lifetime spend\nDescription: \nUse this metric when the user asks about merchant lifetime spend."
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__payment_method",
+                  "metric": "total_spend",
+                  "dimension": "order__payment_method",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4047,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__payment_method.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order payment method\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::order__contains_convenience_items",
+                  "metric": "total_spend",
+                  "dimension": "order__contains_convenience_items",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4035,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension order__contains_convenience_items.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: order contains convenience items\nDimension description:"
+                },
+                {
+                  "type": "relationship",
+                  "name": "total_spend::merchant__first_order_date",
+                  "metric": "total_spend",
+                  "dimension": "merchant__first_order_date",
+                  "metrics": [
+                    "total_spend"
+                  ],
+                  "score": 0.4025,
+                  "text": "Semantic object type: relationship\nMetric total_spend can be grouped or filtered by dimension merchant__first_order_date.\nReadable metric: total spend\nMetric description: Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value.\nReadable dimension: merchant first order date\nDimension description:"
+                }
+              ]
+            },
+            "duration_ms": 805.04
+          },
+          {
+            "step_number": 2,
+            "tool_name": "list_dimensions",
+            "arguments": {
+              "metric_name": "total_spend"
+            },
+            "output": [
+              "merchant__first_order_date",
+              "merchant__last_order_date",
+              "merchant__merchant_legal_name",
+              "merchant__merchant_name",
+              "merchant__source_platform",
+              "metric_time",
+              "order__career_stage",
+              "order__contains_alcohol",
+              "order__contains_convenience_items",
+              "order__contains_grocery",
+              "order__contains_pharmacy",
+              "order__contains_restaurant_food",
+              "order__country_or_market",
+              "order__currency",
+              "order__day_of_week",
+              "order__hour_of_day",
+              "order__merchant_name",
+              "order__order_category",
+              "order__order_date",
+              "order__order_type",
+              "order__payment_method",
+              "order__residence_city",
+              "order__source_platform",
+              "order__week_of_month"
+            ],
+            "duration_ms": 0.07
+          },
+          {
+            "step_number": 3,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "metric_time"
+              ]
+            },
+            "output": {
+              "success": true,
+              "plan": {
+                "metrics": [
+                  "total_spend"
+                ],
+                "group_by": [
+                  "metric_time"
+                ],
+                "filters": []
+              },
+              "metricflow_command": "mf query --metrics total_spend --group-by metric_time",
+              "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.32 seconds\nmetric_time__day       total_spend\n-------------------  -------------\n2026-04-15T00:00:00          18.22\n2025-10-03T00:00:00          13.49\n2026-04-17T00:00:00          24.25\n2025-11-24T00:00:00          13.2\n2026-05-24T00:00:00          14.09\n\n",
+              "error": null,
+              "data": [
+                {
+                  "metric_time__day": "2026-04-15T00:00:00",
+                  "total_spend": 18.22
+                },
+                {
+                  "metric_time__day": "2025-10-03T00:00:00",
+                  "total_spend": 13.49
+                },
+                {
+                  "metric_time__day": "2026-04-17T00:00:00",
+                  "total_spend": 24.25
+                },
+                {
+                  "metric_time__day": "2025-11-24T00:00:00",
+                  "total_spend": 13.2
+                },
+                {
+                  "metric_time__day": "2026-05-24T00:00:00",
+                  "total_spend": 14.09
+                }
+              ],
+              "columns": [
+                "metric_time__day",
+                "total_spend"
+              ]
+            },
+            "duration_ms": 6784.81
+          },
+          {
+            "step_number": 4,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "metric_time"
+              ],
+              "filters": [
+                {
+                  "dimension": "metric_time",
+                  "operator": "gte",
+                  "value": "2025-01-01T00:00:00"
+                }
+              ]
+            },
+            "output": {
+              "success": false,
+              "error": "Invalid filter operator: gte",
+              "failed_plan": {
+                "metrics": [
+                  "total_spend"
+                ],
+                "group_by": [
+                  "metric_time"
+                ],
+                "filters": [
+                  {
+                    "dimension": "metric_time",
+                    "operator": "gte",
+                    "value": "2025-01-01T00:00:00"
+                  }
+                ]
+              },
+              "valid_metrics": [
+                "average_order_value",
+                "delivery_fee_ratio",
+                "delivery_total",
+                "discount_ratio",
+                "discount_total",
+                "fees_total",
+                "items_total",
+                "merchant_average_order_value",
+                "merchant_count",
+                "merchant_lifetime_spend",
+                "merchant_total_orders",
+                "order_count",
+                "refund_ratio",
+                "refund_total",
+                "tip_ratio",
+                "tip_total",
+                "total_spend"
+              ],
+              "valid_dimensions_for_selected_metrics": [
+                "merchant__first_order_date",
+                "merchant__last_order_date",
+                "merchant__merchant_legal_name",
+                "merchant__merchant_name",
+                "merchant__source_platform",
+                "metric_time",
+                "order__career_stage",
+                "order__contains_alcohol",
+                "order__contains_convenience_items",
+                "order__contains_grocery",
+                "order__contains_pharmacy",
+                "order__contains_restaurant_food",
+                "order__country_or_market",
+                "order__currency",
+                "order__day_of_week",
+                "order__hour_of_day",
+                "order__merchant_name",
+                "order__order_category",
+                "order__order_date",
+                "order__order_type",
+                "order__payment_method",
+                "order__residence_city",
+                "order__source_platform",
+                "order__week_of_month"
+              ],
+              "instruction": "Correct the failed query by using only valid metrics and dimensions. If the user asked for an unavailable dimension, choose the closest valid dimension or explain that it is unavailable."
+            },
+            "duration_ms": 0.08
+          },
+          {
+            "step_number": 5,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__order_date"
+              ]
+            },
+            "output": {
+              "success": true,
+              "plan": {
+                "metrics": [
+                  "total_spend"
+                ],
+                "group_by": [
+                  "order__order_date"
+                ],
+                "filters": []
+              },
+              "metricflow_command": "mf query --metrics total_spend --group-by order__order_date",
+              "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.23 seconds\norder__order_date__day      total_spend\n------------------------  -------------\n2026-04-15T00:00:00               18.22\n2025-10-03T00:00:00               13.49\n2025-11-24T00:00:00               13.2\n2026-04-17T00:00:00               24.25\n2026-05-24T00:00:00               14.09\n\n",
+              "error": null,
+              "data": [
+                {
+                  "order__order_date__day": "2026-04-15T00:00:00",
+                  "total_spend": 18.22
+                },
+                {
+                  "order__order_date__day": "2025-10-03T00:00:00",
+                  "total_spend": 13.49
+                },
+                {
+                  "order__order_date__day": "2025-11-24T00:00:00",
+                  "total_spend": 13.2
+                },
+                {
+                  "order__order_date__day": "2026-04-17T00:00:00",
+                  "total_spend": 24.25
+                },
+                {
+                  "order__order_date__day": "2026-05-24T00:00:00",
+                  "total_spend": 14.09
+                }
+              ],
+              "columns": [
+                "order__order_date__day",
+                "total_spend"
+              ]
+            },
+            "duration_ms": 5986.15
+          },
+          {
+            "step_number": 6,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__order_date"
+              ],
+              "filters": [
+                {
+                  "dimension": "order__order_date",
+                  "operator": "gte",
+                  "value": "2025-01-01"
+                }
+              ]
+            },
+            "output": {
+              "success": false,
+              "error": "Invalid filter operator: gte",
+              "failed_plan": {
+                "metrics": [
+                  "total_spend"
+                ],
+                "group_by": [
+                  "order__order_date"
+                ],
+                "filters": [
+                  {
+                    "dimension": "order__order_date",
+                    "operator": "gte",
+                    "value": "2025-01-01"
+                  }
+                ]
+              },
+              "valid_metrics": [
+                "average_order_value",
+                "delivery_fee_ratio",
+                "delivery_total",
+                "discount_ratio",
+                "discount_total",
+                "fees_total",
+                "items_total",
+                "merchant_average_order_value",
+                "merchant_count",
+                "merchant_lifetime_spend",
+                "merchant_total_orders",
+                "order_count",
+                "refund_ratio",
+                "refund_total",
+                "tip_ratio",
+                "tip_total",
+                "total_spend"
+              ],
+              "valid_dimensions_for_selected_metrics": [
+                "merchant__first_order_date",
+                "merchant__last_order_date",
+                "merchant__merchant_legal_name",
+                "merchant__merchant_name",
+                "merchant__source_platform",
+                "metric_time",
+                "order__career_stage",
+                "order__contains_alcohol",
+                "order__contains_convenience_items",
+                "order__contains_grocery",
+                "order__contains_pharmacy",
+                "order__contains_restaurant_food",
+                "order__country_or_market",
+                "order__currency",
+                "order__day_of_week",
+                "order__hour_of_day",
+                "order__merchant_name",
+                "order__order_category",
+                "order__order_date",
+                "order__order_type",
+                "order__payment_method",
+                "order__residence_city",
+                "order__source_platform",
+                "order__week_of_month"
+              ],
+              "instruction": "Correct the failed query by using only valid metrics and dimensions. If the user asked for an unavailable dimension, choose the closest valid dimension or explain that it is unavailable."
+            },
+            "duration_ms": 0.09
+          },
+          {
+            "step_number": 7,
+            "tool_name": "list_dimensions",
+            "arguments": {
+              "metric_name": "total_spend"
+            },
+            "output": [
+              "merchant__first_order_date",
+              "merchant__last_order_date",
+              "merchant__merchant_legal_name",
+              "merchant__merchant_name",
+              "merchant__source_platform",
+              "metric_time",
+              "order__career_stage",
+              "order__contains_alcohol",
+              "order__contains_convenience_items",
+              "order__contains_grocery",
+              "order__contains_pharmacy",
+              "order__contains_restaurant_food",
+              "order__country_or_market",
+              "order__currency",
+              "order__day_of_week",
+              "order__hour_of_day",
+              "order__merchant_name",
+              "order__order_category",
+              "order__order_date",
+              "order__order_type",
+              "order__payment_method",
+              "order__residence_city",
+              "order__source_platform",
+              "order__week_of_month"
+            ],
+            "duration_ms": 0.0
+          },
+          {
+            "step_number": 8,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__order_date"
+              ],
+              "filters": [
+                {
+                  "dimension": "order__order_date",
+                  "operator": "between",
+                  "value": [
+                    "2025-01-01",
+                    "2026-12-31"
+                  ]
+                }
+              ]
+            },
+            "output": {
+              "success": false,
+              "error": "Invalid filter operator: between",
+              "failed_plan": {
+                "metrics": [
+                  "total_spend"
+                ],
+                "group_by": [
+                  "order__order_date"
+                ],
+                "filters": [
+                  {
+                    "dimension": "order__order_date",
+                    "operator": "between",
+                    "value": [
+                      "2025-01-01",
+                      "2026-12-31"
+                    ]
+                  }
+                ]
+              },
+              "valid_metrics": [
+                "average_order_value",
+                "delivery_fee_ratio",
+                "delivery_total",
+                "discount_ratio",
+                "discount_total",
+                "fees_total",
+                "items_total",
+                "merchant_average_order_value",
+                "merchant_count",
+                "merchant_lifetime_spend",
+                "merchant_total_orders",
+                "order_count",
+                "refund_ratio",
+                "refund_total",
+                "tip_ratio",
+                "tip_total",
+                "total_spend"
+              ],
+              "valid_dimensions_for_selected_metrics": [
+                "merchant__first_order_date",
+                "merchant__last_order_date",
+                "merchant__merchant_legal_name",
+                "merchant__merchant_name",
+                "merchant__source_platform",
+                "metric_time",
+                "order__career_stage",
+                "order__contains_alcohol",
+                "order__contains_convenience_items",
+                "order__contains_grocery",
+                "order__contains_pharmacy",
+                "order__contains_restaurant_food",
+                "order__country_or_market",
+                "order__currency",
+                "order__day_of_week",
+                "order__hour_of_day",
+                "order__merchant_name",
+                "order__order_category",
+                "order__order_date",
+                "order__order_type",
+                "order__payment_method",
+                "order__residence_city",
+                "order__source_platform",
+                "order__week_of_month"
+              ],
+              "instruction": "Correct the failed query by using only valid metrics and dimensions. If the user asked for an unavailable dimension, choose the closest valid dimension or explain that it is unavailable."
+            },
+            "duration_ms": 0.04
+          },
+          {
+            "step_number": 9,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "total_spend"
+              ],
+              "group_by": [
+                "order__order_date"
+              ]
+            },
+            "output": {
+              "success": true,
+              "plan": {
+                "metrics": [
+                  "total_spend"
+                ],
+                "group_by": [
+                  "order__order_date"
+                ],
+                "filters": []
+              },
+              "metricflow_command": "mf query --metrics total_spend --group-by order__order_date",
+              "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.23 seconds\norder__order_date__day      total_spend\n------------------------  -------------\n2026-04-15T00:00:00               18.22\n2025-10-03T00:00:00               13.49\n2026-05-24T00:00:00               14.09\n2025-11-24T00:00:00               13.2\n2026-04-17T00:00:00               24.25\n\n",
+              "error": null,
+              "data": [
+                {
+                  "order__order_date__day": "2026-04-15T00:00:00",
+                  "total_spend": 18.22
+                },
+                {
+                  "order__order_date__day": "2025-10-03T00:00:00",
+                  "total_spend": 13.49
+                },
+                {
+                  "order__order_date__day": "2026-05-24T00:00:00",
+                  "total_spend": 14.09
+                },
+                {
+                  "order__order_date__day": "2025-11-24T00:00:00",
+                  "total_spend": 13.2
+                },
+                {
+                  "order__order_date__day": "2026-04-17T00:00:00",
+                  "total_spend": 24.25
+                }
+              ],
+              "columns": [
+                "order__order_date__day",
+                "total_spend"
+              ]
+            },
+            "duration_ms": 6164.39
+          }
+        ],
+        "status": "success",
+        "error": null
+      }
+    },
+    {
+      "id": "refund_ratio",
+      "question": "What is my refund ratio?",
+      "passed": false,
+      "checks": [
+        {
+          "check": "expected_tools",
+          "passed": false,
+          "message": "Missing expected tools: ['search_semantic_layer']. Used tools: ['list_metrics', 'run_metricflow_query']"
+        },
+        {
+          "check": "metricflow_success",
+          "passed": true,
+          "message": "MetricFlow succeeded."
+        },
+        {
+          "check": "expected_metrics",
+          "passed": true,
+          "message": "Expected metrics found."
+        },
+        {
+          "check": "expected_group_by",
+          "passed": true,
+          "message": "Expected group_by found."
+        },
+        {
+          "check": "expected_filters",
+          "passed": true,
+          "message": "No filter expectation."
+        }
+      ],
+      "answer": "Your refund ratio is 0, meaning there have been no refunds relative to orders.",
+      "plans": [
+        {
+          "metrics": [
+            "refund_ratio"
+          ],
+          "group_by": [],
+          "filters": []
+        }
+      ],
+      "tool_results": [
+        {
+          "tool": "list_metrics",
+          "arguments": {},
+          "output": [
+            "average_order_value",
+            "delivery_fee_ratio",
+            "delivery_total",
+            "discount_ratio",
+            "discount_total",
+            "fees_total",
+            "items_total",
+            "merchant_average_order_value",
+            "merchant_count",
+            "merchant_lifetime_spend",
+            "merchant_total_orders",
+            "order_count",
+            "refund_ratio",
+            "refund_total",
+            "tip_ratio",
+            "tip_total",
+            "total_spend"
+          ]
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "refund_ratio"
+            ]
+          },
+          "output": {
+            "success": true,
+            "plan": {
+              "metrics": [
+                "refund_ratio"
+              ],
+              "group_by": [],
+              "filters": []
+            },
+            "metricflow_command": "mf query --metrics refund_ratio",
+            "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.22 seconds\n  refund_ratio\n--------------\n             0\n\n",
+            "error": null,
+            "data": [
+              {
+                "refund_ratio": 0
+              }
+            ],
+            "columns": [
+              "refund_ratio"
+            ]
+          }
+        }
+      ],
+      "execution_trace": {
+        "started_at": "2026-06-27T11:53:02",
+        "finished_at": "2026-06-27T11:53:16",
+        "question": "What is my refund ratio?",
+        "conversation_history_used": [],
+        "final_answer": "Your refund ratio is 0, meaning there have been no refunds relative to orders.",
+        "steps": [
+          {
+            "step_number": 1,
+            "tool_name": "list_metrics",
+            "arguments": {},
+            "output": [
+              "average_order_value",
+              "delivery_fee_ratio",
+              "delivery_total",
+              "discount_ratio",
+              "discount_total",
+              "fees_total",
+              "items_total",
+              "merchant_average_order_value",
+              "merchant_count",
+              "merchant_lifetime_spend",
+              "merchant_total_orders",
+              "order_count",
+              "refund_ratio",
+              "refund_total",
+              "tip_ratio",
+              "tip_total",
+              "total_spend"
+            ],
+            "duration_ms": 0.01
+          },
+          {
+            "step_number": 2,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "refund_ratio"
+              ]
+            },
+            "output": {
+              "success": true,
+              "plan": {
+                "metrics": [
+                  "refund_ratio"
+                ],
+                "group_by": [],
+                "filters": []
+              },
+              "metricflow_command": "mf query --metrics refund_ratio",
+              "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.22 seconds\n  refund_ratio\n--------------\n             0\n\n",
+              "error": null,
+              "data": [
+                {
+                  "refund_ratio": 0
+                }
+              ],
+              "columns": [
+                "refund_ratio"
+              ]
+            },
+            "duration_ms": 6973.9
+          }
+        ],
+        "status": "success",
+        "error": null
+      }
+    },
+    {
+      "id": "discount_ratio_by_city",
+      "question": "Show discount ratio by city.",
+      "passed": true,
+      "checks": [
+        {
+          "check": "expected_tools",
+          "passed": true,
+          "message": "Expected tools used."
+        },
+        {
+          "check": "metricflow_success",
+          "passed": true,
+          "message": "MetricFlow succeeded."
+        },
+        {
+          "check": "expected_metrics",
+          "passed": true,
+          "message": "Expected metrics found."
+        },
+        {
+          "check": "expected_group_by",
+          "passed": true,
+          "message": "Expected group_by found."
+        },
+        {
+          "check": "expected_filters",
+          "passed": true,
+          "message": "No filter expectation."
+        }
+      ],
+      "answer": "The discount ratio by city is available for Berlin, with a discount ratio of approximately -0.059. If you want to see discount ratios for other cities, please let me know.",
+      "plans": [
+        {
+          "metrics": [
+            "discount_ratio"
+          ],
+          "group_by": [
+            "order__residence_city"
+          ],
+          "filters": []
+        }
+      ],
+      "tool_results": [
+        {
+          "tool": "search_semantic_layer",
+          "arguments": {
+            "query": "city",
+            "object_type": "dimension"
+          },
+          "output": {
+            "query": "city",
+            "object_type": "dimension",
+            "metric_name": null,
+            "matches": [
+              {
+                "type": "dimension",
+                "name": "order__residence_city",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value",
+                  "delivery_fee_ratio",
+                  "delivery_total",
+                  "discount_ratio",
+                  "discount_total",
+                  "fees_total",
+                  "items_total",
+                  "order_count",
+                  "refund_ratio",
+                  "refund_total",
+                  "tip_ratio",
+                  "tip_total",
+                  "total_spend"
+                ],
+                "score": 0.2912,
+                "text": "Semantic object type: dimension\nDimension name: order__residence_city\nReadable name: order residence city\nDescription: \nUse this dimension when the user asks about order residence city."
+              },
+              {
+                "type": "dimension",
+                "name": "order__country_or_market",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value",
+                  "delivery_fee_ratio",
+                  "delivery_total",
+                  "discount_ratio",
+                  "discount_total",
+                  "fees_total",
+                  "items_total",
+                  "order_count",
+                  "refund_ratio",
+                  "refund_total",
+                  "tip_ratio",
+                  "tip_total",
+                  "total_spend"
+                ],
+                "score": 0.1939,
+                "text": "Semantic object type: dimension\nDimension name: order__country_or_market\nReadable name: order country or market\nDescription: \nUse this dimension when the user asks about order country or market."
+              },
+              {
+                "type": "dimension",
+                "name": "merchant__merchant_name",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value",
+                  "delivery_fee_ratio",
+                  "delivery_total",
+                  "discount_ratio",
+                  "discount_total",
+                  "fees_total",
+                  "items_total",
+                  "merchant_average_order_value",
+                  "merchant_count",
+                  "merchant_lifetime_spend",
+                  "merchant_total_orders",
+                  "order_count",
+                  "refund_ratio",
+                  "refund_total",
+                  "tip_ratio",
+                  "tip_total",
+                  "total_spend"
+                ],
+                "score": 0.187,
+                "text": "Semantic object type: dimension\nDimension name: merchant__merchant_name\nReadable name: merchant merchant name\nDescription: \nUse this dimension when the user asks about merchant merchant name."
+              },
+              {
+                "type": "dimension",
+                "name": "merchant__merchant_legal_name",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value",
+                  "delivery_fee_ratio",
+                  "delivery_total",
+                  "discount_ratio",
+                  "discount_total",
+                  "fees_total",
+                  "items_total",
+                  "merchant_average_order_value",
+                  "merchant_count",
+                  "merchant_lifetime_spend",
+                  "merchant_total_orders",
+                  "order_count",
+                  "refund_ratio",
+                  "refund_total",
+                  "tip_ratio",
+                  "tip_total",
+                  "total_spend"
+                ],
+                "score": 0.1808,
+                "text": "Semantic object type: dimension\nDimension name: merchant__merchant_legal_name\nReadable name: merchant merchant legal name\nDescription: \nUse this dimension when the user asks about merchant merchant legal name."
+              },
+              {
+                "type": "dimension",
+                "name": "metric_time",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value",
+                  "delivery_fee_ratio",
+                  "delivery_total",
+                  "discount_ratio",
+                  "discount_total",
+                  "fees_total",
+                  "items_total",
+                  "merchant_average_order_value",
+                  "merchant_count",
+                  "merchant_lifetime_spend",
+                  "merchant_total_orders",
+                  "order_count",
+                  "refund_ratio",
+                  "refund_total",
+                  "tip_ratio",
+                  "tip_total",
+                  "total_spend"
+                ],
+                "score": 0.1696,
+                "text": "Semantic object type: dimension\nDimension name: metric_time\nReadable name: metric time\nDescription: \nUse this dimension when the user asks about metric time."
+              },
+              {
+                "type": "dimension",
+                "name": "merchant__source_platform",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value",
+                  "delivery_fee_ratio",
+                  "delivery_total",
+                  "discount_ratio",
+                  "discount_total",
+                  "fees_total",
+                  "items_total",
+                  "merchant_average_order_value",
+                  "merchant_count",
+                  "merchant_lifetime_spend",
+                  "merchant_total_orders",
+                  "order_count",
+                  "refund_ratio",
+                  "refund_total",
+                  "tip_ratio",
+                  "tip_total",
+                  "total_spend"
+                ],
+                "score": 0.1666,
+                "text": "Semantic object type: dimension\nDimension name: merchant__source_platform\nReadable name: merchant source platform\nDescription: \nUse this dimension when the user asks about merchant source platform."
+              },
+              {
+                "type": "dimension",
+                "name": "order__day_of_week",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value",
+                  "delivery_fee_ratio",
+                  "delivery_total",
+                  "discount_ratio",
+                  "discount_total",
+                  "fees_total",
+                  "items_total",
+                  "order_count",
+                  "refund_ratio",
+                  "refund_total",
+                  "tip_ratio",
+                  "tip_total",
+                  "total_spend"
+                ],
+                "score": 0.16,
+                "text": "Semantic object type: dimension\nDimension name: order__day_of_week\nReadable name: order day of week\nDescription: \nUse this dimension when the user asks about order day of week."
+              },
+              {
+                "type": "dimension",
+                "name": "order__week_of_month",
+                "metric": null,
+                "dimension": null,
+                "metrics": [
+                  "average_order_value",
+                  "delivery_fee_ratio",
+                  "delivery_total",
+                  "discount_ratio",
+                  "discount_total",
+                  "fees_total",
+                  "items_total",
+                  "order_count",
+                  "refund_ratio",
+                  "refund_total",
+                  "tip_ratio",
+                  "tip_total",
+                  "total_spend"
+                ],
+                "score": 0.1579,
+                "text": "Semantic object type: dimension\nDimension name: order__week_of_month\nReadable name: order week of month\nDescription: \nUse this dimension when the user asks about order week of month."
+              }
+            ]
+          }
+        },
+        {
+          "tool": "run_metricflow_query",
+          "arguments": {
+            "metrics": [
+              "discount_ratio"
+            ],
+            "group_by": [
+              "order__residence_city"
+            ]
+          },
+          "output": {
+            "success": true,
+            "plan": {
+              "metrics": [
+                "discount_ratio"
+              ],
+              "group_by": [
+                "order__residence_city"
+              ],
+              "filters": []
+            },
+            "metricflow_command": "mf query --metrics discount_ratio --group-by order__residence_city",
+            "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.22 seconds\norder__residence_city      discount_ratio\n-----------------------  ----------------\nBerlin                         -0.0586186\n\n",
+            "error": null,
+            "data": [
+              {
+                "order__residence_city": "Berlin",
+                "discount_ratio": -0.0586186
+              }
+            ],
+            "columns": [
+              "order__residence_city",
+              "discount_ratio"
+            ]
+          }
+        }
+      ],
+      "execution_trace": {
+        "started_at": "2026-06-27T11:53:16",
+        "finished_at": "2026-06-27T11:53:29",
+        "question": "Show discount ratio by city.",
+        "conversation_history_used": [],
+        "final_answer": "The discount ratio by city is available for Berlin, with a discount ratio of approximately -0.059. If you want to see discount ratios for other cities, please let me know.",
+        "steps": [
+          {
+            "step_number": 1,
+            "tool_name": "search_semantic_layer",
+            "arguments": {
+              "query": "city",
+              "object_type": "dimension"
+            },
+            "output": {
+              "query": "city",
+              "object_type": "dimension",
+              "metric_name": null,
+              "matches": [
+                {
+                  "type": "dimension",
+                  "name": "order__residence_city",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value",
+                    "delivery_fee_ratio",
+                    "delivery_total",
+                    "discount_ratio",
+                    "discount_total",
+                    "fees_total",
+                    "items_total",
+                    "order_count",
+                    "refund_ratio",
+                    "refund_total",
+                    "tip_ratio",
+                    "tip_total",
+                    "total_spend"
+                  ],
+                  "score": 0.2912,
+                  "text": "Semantic object type: dimension\nDimension name: order__residence_city\nReadable name: order residence city\nDescription: \nUse this dimension when the user asks about order residence city."
+                },
+                {
+                  "type": "dimension",
+                  "name": "order__country_or_market",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value",
+                    "delivery_fee_ratio",
+                    "delivery_total",
+                    "discount_ratio",
+                    "discount_total",
+                    "fees_total",
+                    "items_total",
+                    "order_count",
+                    "refund_ratio",
+                    "refund_total",
+                    "tip_ratio",
+                    "tip_total",
+                    "total_spend"
+                  ],
+                  "score": 0.1939,
+                  "text": "Semantic object type: dimension\nDimension name: order__country_or_market\nReadable name: order country or market\nDescription: \nUse this dimension when the user asks about order country or market."
+                },
+                {
+                  "type": "dimension",
+                  "name": "merchant__merchant_name",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value",
+                    "delivery_fee_ratio",
+                    "delivery_total",
+                    "discount_ratio",
+                    "discount_total",
+                    "fees_total",
+                    "items_total",
+                    "merchant_average_order_value",
+                    "merchant_count",
+                    "merchant_lifetime_spend",
+                    "merchant_total_orders",
+                    "order_count",
+                    "refund_ratio",
+                    "refund_total",
+                    "tip_ratio",
+                    "tip_total",
+                    "total_spend"
+                  ],
+                  "score": 0.187,
+                  "text": "Semantic object type: dimension\nDimension name: merchant__merchant_name\nReadable name: merchant merchant name\nDescription: \nUse this dimension when the user asks about merchant merchant name."
+                },
+                {
+                  "type": "dimension",
+                  "name": "merchant__merchant_legal_name",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value",
+                    "delivery_fee_ratio",
+                    "delivery_total",
+                    "discount_ratio",
+                    "discount_total",
+                    "fees_total",
+                    "items_total",
+                    "merchant_average_order_value",
+                    "merchant_count",
+                    "merchant_lifetime_spend",
+                    "merchant_total_orders",
+                    "order_count",
+                    "refund_ratio",
+                    "refund_total",
+                    "tip_ratio",
+                    "tip_total",
+                    "total_spend"
+                  ],
+                  "score": 0.1808,
+                  "text": "Semantic object type: dimension\nDimension name: merchant__merchant_legal_name\nReadable name: merchant merchant legal name\nDescription: \nUse this dimension when the user asks about merchant merchant legal name."
+                },
+                {
+                  "type": "dimension",
+                  "name": "metric_time",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value",
+                    "delivery_fee_ratio",
+                    "delivery_total",
+                    "discount_ratio",
+                    "discount_total",
+                    "fees_total",
+                    "items_total",
+                    "merchant_average_order_value",
+                    "merchant_count",
+                    "merchant_lifetime_spend",
+                    "merchant_total_orders",
+                    "order_count",
+                    "refund_ratio",
+                    "refund_total",
+                    "tip_ratio",
+                    "tip_total",
+                    "total_spend"
+                  ],
+                  "score": 0.1696,
+                  "text": "Semantic object type: dimension\nDimension name: metric_time\nReadable name: metric time\nDescription: \nUse this dimension when the user asks about metric time."
+                },
+                {
+                  "type": "dimension",
+                  "name": "merchant__source_platform",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value",
+                    "delivery_fee_ratio",
+                    "delivery_total",
+                    "discount_ratio",
+                    "discount_total",
+                    "fees_total",
+                    "items_total",
+                    "merchant_average_order_value",
+                    "merchant_count",
+                    "merchant_lifetime_spend",
+                    "merchant_total_orders",
+                    "order_count",
+                    "refund_ratio",
+                    "refund_total",
+                    "tip_ratio",
+                    "tip_total",
+                    "total_spend"
+                  ],
+                  "score": 0.1666,
+                  "text": "Semantic object type: dimension\nDimension name: merchant__source_platform\nReadable name: merchant source platform\nDescription: \nUse this dimension when the user asks about merchant source platform."
+                },
+                {
+                  "type": "dimension",
+                  "name": "order__day_of_week",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value",
+                    "delivery_fee_ratio",
+                    "delivery_total",
+                    "discount_ratio",
+                    "discount_total",
+                    "fees_total",
+                    "items_total",
+                    "order_count",
+                    "refund_ratio",
+                    "refund_total",
+                    "tip_ratio",
+                    "tip_total",
+                    "total_spend"
+                  ],
+                  "score": 0.16,
+                  "text": "Semantic object type: dimension\nDimension name: order__day_of_week\nReadable name: order day of week\nDescription: \nUse this dimension when the user asks about order day of week."
+                },
+                {
+                  "type": "dimension",
+                  "name": "order__week_of_month",
+                  "metric": null,
+                  "dimension": null,
+                  "metrics": [
+                    "average_order_value",
+                    "delivery_fee_ratio",
+                    "delivery_total",
+                    "discount_ratio",
+                    "discount_total",
+                    "fees_total",
+                    "items_total",
+                    "order_count",
+                    "refund_ratio",
+                    "refund_total",
+                    "tip_ratio",
+                    "tip_total",
+                    "total_spend"
+                  ],
+                  "score": 0.1579,
+                  "text": "Semantic object type: dimension\nDimension name: order__week_of_month\nReadable name: order week of month\nDescription: \nUse this dimension when the user asks about order week of month."
+                }
+              ]
+            },
+            "duration_ms": 852.74
+          },
+          {
+            "step_number": 2,
+            "tool_name": "run_metricflow_query",
+            "arguments": {
+              "metrics": [
+                "discount_ratio"
+              ],
+              "group_by": [
+                "order__residence_city"
+              ]
+            },
+            "output": {
+              "success": true,
+              "plan": {
+                "metrics": [
+                  "discount_ratio"
+                ],
+                "group_by": [
+                  "order__residence_city"
+                ],
+                "filters": []
+              },
+              "metricflow_command": "mf query --metrics discount_ratio --group-by order__residence_city",
+              "result": "\n\n\u280b Initiating query\u2026\n\n\u2819 Initiating query\u2026\n\u2714 Success \ud83e\udd84 - query completed after 0.22 seconds\norder__residence_city      discount_ratio\n-----------------------  ----------------\nBerlin                         -0.0586186\n\n",
+              "error": null,
+              "data": [
+                {
+                  "order__residence_city": "Berlin",
+                  "discount_ratio": -0.0586186
+                }
+              ],
+              "columns": [
+                "order__residence_city",
+                "discount_ratio"
+              ]
+            },
+            "duration_ms": 5985.62
+          }
+        ],
+        "status": "success",
+        "error": null
+      }
+    }
+  ]
+}

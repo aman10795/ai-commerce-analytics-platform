@@ -2,7 +2,7 @@ version: 2
 
 semantic_models:
   - name: food_delivery_orders
-    description: "Semantic model for food delivery orders."
+    description: "Semantic model for food delivery orders at order grain. One row represents one completed or recorded food delivery order with spend, fees, refunds, merchant, category, location, and user-context attributes."
     model: ref('fct_orders')
 
     defaults:
@@ -21,144 +21,179 @@ semantic_models:
       - name: order_date
         type: time
         expr: order_timestamp
+        description: "Date when the food delivery order was placed. Use for daily, weekly, monthly, and time trend analysis."
         type_params:
           time_granularity: day
 
       - name: source_platform
         type: categorical
+        description: "Food delivery platform or source system where the order originated, such as Wolt or another delivery provider."
 
       - name: merchant_name
         type: categorical
+        description: "Name of the restaurant, shop, store, vendor, or merchant where the order was placed."
 
       - name: currency
         type: categorical
+        description: "Currency used for the order transaction."
 
       - name: country_or_market
         type: categorical
+        description: "Country or market associated with the order. Use when users ask about country, market, geography, or region."
 
       - name: order_category
         type: categorical
+        description: "High-level category of the order, such as restaurant food, grocery, convenience, pharmacy, alcohol, or other order types."
 
       - name: contains_alcohol
         type: categorical
+        description: "Boolean flag showing whether the order included alcohol items. Use for alcohol, beer, wine, liquor, or alcoholic drink analysis."
 
       - name: contains_grocery
         type: categorical
+        description: "Boolean flag showing whether the order included grocery items. Use for grocery, supermarket, food staples, or household shopping analysis."
 
       - name: contains_restaurant_food
         type: categorical
+        description: "Boolean flag showing whether the order included restaurant or prepared food items."
 
       - name: contains_pharmacy
         type: categorical
+        description: "Boolean flag showing whether the order included pharmacy or health-related items."
 
       - name: contains_convenience_items
         type: categorical
+        description: "Boolean flag showing whether the order included convenience-store items such as snacks, drinks, or small everyday purchases."
 
       - name: payment_method
         type: categorical
+        description: "Payment method used for the order, such as card, PayPal, wallet, or other payment options."
 
       - name: order_type
         type: categorical
+        description: "Type of order or delivery transaction. Use when users ask about delivery, pickup, subscription, refund, or other order types."
 
       - name: week_of_month
         type: categorical
+        description: "Week number within the month when the order was placed. Use for intra-month spending or order pattern analysis."
 
       - name: day_of_week
         type: categorical
+        description: "Day of week when the order was placed. Use to compare weekday versus weekend ordering behavior."
 
       - name: hour_of_day
         type: categorical
+        description: "Hour of day when the order was placed. Use to analyze breakfast, lunch, dinner, late-night, or hourly ordering patterns."
 
       - name: residence_city
         type: categorical
+        description: "City associated with the user's residence or order context. Use when users ask about city, area, location, place, or where spending happened."
 
       - name: career_stage
         type: categorical
+        description: "User life or career stage associated with the order period, such as student, internship, full-time work, or other personal timeline phases."
 
     measures:
       - name: order_count
         agg: count_distinct
         expr: order_key
+        description: "Distinct count of food delivery orders."
 
       - name: total_spend_measure
         agg: sum
         expr: calculated_order_total_amount
+        description: "Sum of calculated total order amount across orders."
 
       - name: items_total_measure
         agg: sum
         expr: items_total_amount
+        description: "Sum of item-level food, grocery, or product amounts before additional fees, tips, refunds, or discounts."
 
       - name: fees_total_measure
         agg: sum
         expr: fees_total_amount
+        description: "Sum of service fees, platform fees, or other non-delivery fees charged on orders."
 
       - name: delivery_total_measure
         agg: sum
         expr: delivery_total_amount
+        description: "Sum of delivery charges paid across orders."
 
       - name: tip_total_measure
         agg: sum
         expr: tip_total_amount
+        description: "Sum of tips paid to couriers or delivery partners."
 
       - name: discount_total_measure
         agg: sum
         expr: discount_total_amount
+        description: "Sum of discounts, promotions, vouchers, or credits applied to orders."
 
       - name: refund_total_measure
         agg: sum
         expr: refund_total_amount
+        description: "Sum of refunds issued for orders."
 
 metrics:
   - name: order_count
     label: "Order Count"
+    description: "Number of distinct food delivery orders. Use when users ask how many orders, purchases, deliveries, or transactions they had."
     type: simple
     type_params:
       measure: order_count
 
   - name: total_spend
     label: "Total Spend"
+    description: "Total money spent across food delivery orders. Use when users ask about money spent, total cost, total paid, expenses, spending, or overall order value."
     type: simple
     type_params:
       measure: total_spend_measure
 
   - name: items_total
     label: "Items Total"
+    description: "Total value of ordered items before fees, delivery charges, tips, discounts, and refunds. Use when users ask about food/item/product spend excluding extra charges."
     type: simple
     type_params:
       measure: items_total_measure
 
   - name: fees_total
     label: "Fees Total"
+    description: "Total service, platform, or other fees paid across orders. Use when users ask about fees, service charges, or platform charges."
     type: simple
     type_params:
       measure: fees_total_measure
 
   - name: delivery_total
     label: "Delivery Total"
+    description: "Total delivery charges paid across orders. Use when users ask about delivery fees, delivery cost, courier charges, or shipping-like charges."
     type: simple
     type_params:
       measure: delivery_total_measure
 
   - name: tip_total
     label: "Tip Total"
+    description: "Total tips paid across orders. Use when users ask about tips, tipping, or courier gratuity."
     type: simple
     type_params:
       measure: tip_total_measure
 
   - name: discount_total
     label: "Discount Total"
+    description: "Total discounts, promotions, vouchers, and credits applied to orders. Use when users ask about savings, discounts, offers, vouchers, or promotions."
     type: simple
     type_params:
       measure: discount_total_measure
 
   - name: refund_total
     label: "Refund Total"
+    description: "Total refunded amount across orders. Use when users ask about refunds, returned money, reimbursements, or failed/problem orders."
     type: simple
     type_params:
       measure: refund_total_measure
 
   - name: average_order_value
     label: "Average Order Value"
+    description: "Average spend per order, calculated as total spend divided by order count. Use when users ask about average basket size, average order value, average spend, or typical order amount."
     type: ratio
     type_params:
       numerator: total_spend
@@ -166,6 +201,7 @@ metrics:
 
   - name: delivery_fee_ratio
     label: "Delivery Fee Ratio"
+    description: "Share of total spend represented by delivery charges. Use when users ask how much of spending went to delivery fees or whether delivery cost is high."
     type: ratio
     type_params:
       numerator: delivery_total
@@ -173,6 +209,7 @@ metrics:
 
   - name: tip_ratio
     label: "Tip Ratio"
+    description: "Share of total spend represented by tips. Use when users ask about tipping rate or what percentage of spend went to tips."
     type: ratio
     type_params:
       numerator: tip_total
@@ -180,6 +217,7 @@ metrics:
 
   - name: discount_ratio
     label: "Discount Ratio"
+    description: "Share of total spend offset by discounts, promotions, vouchers, or credits. Use when users ask about discount rate, savings rate, or promotion impact."
     type: ratio
     type_params:
       numerator: discount_total
@@ -187,6 +225,7 @@ metrics:
 
   - name: refund_ratio
     label: "Refund Ratio"
+    description: "Share of total spend refunded back. Use when users ask about refund rate, refund percentage, problem orders, or money returned."
     type: ratio
     type_params:
       numerator: refund_total

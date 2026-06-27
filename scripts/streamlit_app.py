@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-from ai_metric_query import run_analytics_agent
+from analytics.ai_metric_query import run_analytics_agent
 
 
 st.set_page_config(
@@ -46,8 +46,44 @@ with st.sidebar:
             with st.expander(f"{i}. {item['question']}"):
                 st.write(item["answer"])
 
+def render_semantic_search_output(output: dict) -> None:
+    matches = output.get("matches", [])
 
-def render_tool_output(output: dict) -> None:
+    if not matches:
+        st.warning("No semantic matches found.")
+        st.json(output)
+        return
+
+    rows = []
+
+    for rank, match in enumerate(matches, start=1):
+        rows.append(
+            {
+                "rank": rank,
+                "type": match.get("type"),
+                "name": match.get("name"),
+                "metric": match.get("metric"),
+                "dimension": match.get("dimension"),
+                "score": match.get("score"),
+                "available_metrics": ", ".join(match.get("metrics", [])[:5]),
+            }
+        )
+
+    df = pd.DataFrame(rows)
+
+    st.write(f"Semantic search query: `{output.get('query')}`")
+    st.dataframe(df, use_container_width=True)
+
+    if "score" in df.columns:
+        chart_df = df.set_index("name")[["score"]]
+        st.bar_chart(chart_df)
+
+
+def render_tool_output(output: dict, tool_name: str | None = None) -> None:
+    if tool_name == "search_semantic_layer":
+        render_semantic_search_output(output)
+        return
+
     if isinstance(output, dict) and output.get("data"):
         data = output["data"]
         columns = output.get("columns", [])
@@ -112,4 +148,7 @@ if st.button("Run query") and question:
             st.json(step["arguments"])
 
             st.write("Output")
-            render_tool_output(step["output"])
+            render_tool_output(
+                output=step["output"],
+                tool_name=step["tool"],
+            )

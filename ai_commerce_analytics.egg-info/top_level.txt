@@ -1,0 +1,2 @@
+analytics
+mcp_server
