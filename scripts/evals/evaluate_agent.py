@@ -6,7 +6,7 @@ from typing import Any
 from analytics.agent import run_analytics_agent
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EVAL_OUTPUT_DIR = PROJECT_ROOT / "logs" / "eval_runs"
 EVAL_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 

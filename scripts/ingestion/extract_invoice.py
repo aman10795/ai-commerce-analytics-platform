@@ -243,7 +243,7 @@ def main():
             metadata["completed_at"] = now_utc()
             metadata["status"] = "success"
 
-            parsed_json["_pipeline_metadata"] = metadataß
+            parsed_json["_pipeline_metadata"] = metadata
 
             print("Saving raw AI JSON output...", flush=True)
             save_json(parsed_json, output_path)

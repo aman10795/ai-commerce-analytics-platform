@@ -6,7 +6,7 @@ from typing import Any
 import duckdb
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "warehouse" / "commerce_analytics.duckdb"
 DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "data" / "demo" / "raw_document_extractions_raw.jsonl"

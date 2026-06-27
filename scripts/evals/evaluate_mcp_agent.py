@@ -6,7 +6,7 @@ from typing import Any
 from analytics.mcp_agent import run_mcp_analytics_agent
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EVAL_LOG_DIR = PROJECT_ROOT / "logs" / "evals"
 EVAL_LOG_DIR.mkdir(parents=True, exist_ok=True)
 

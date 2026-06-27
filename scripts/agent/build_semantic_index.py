@@ -9,7 +9,7 @@ from openai import OpenAI
 from analytics.semantic_metadata import get_metric_catalog, list_metrics
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DBT_PROJECT_DIR = PROJECT_ROOT / "commerce_analytics_dbt"
 MODELS_DIR = DBT_PROJECT_DIR / "models"
 INDEX_PATH = PROJECT_ROOT / "artifacts" / "semantic_index.json"

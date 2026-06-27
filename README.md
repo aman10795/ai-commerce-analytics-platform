@@ -1,3 +1,4 @@
+![CI](https://github.com/<aman10795>/<https://github.com/aman10795/ai-commerce-analytics-platform>/actions/workflows/ci.yml/badge.svg)
 # AI Commerce Analytics Platform
 
 An AI-native analytics engineering project that turns unstructured food-delivery documents into governed analytics models and exposes them through a semantic-layer-powered AI assistant.

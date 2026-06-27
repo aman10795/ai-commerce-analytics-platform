@@ -43,7 +43,7 @@ jobs:
 
       - name: Create demo DuckDB warehouse
         run: |
-          python scripts/create_demo_warehouse.py --reset
+          python scripts/demo/create_demo_warehouse.py --reset
 
       - name: dbt parse
         working-directory: commerce_analytics_dbt
