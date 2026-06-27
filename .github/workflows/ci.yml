@@ -57,4 +57,4 @@ jobs:
 
       - name: MCP server smoke test
         run: |
-          python scripts/test_mcp_smoke.py
+          python scripts/demo/test_mcp_smoke.py
