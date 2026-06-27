@@ -28,7 +28,16 @@ AGENT_LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 load_dotenv(PROJECT_ROOT / ".env")
 
-client = OpenAI()
+client: OpenAI | None = None
+
+
+def get_openai_client() -> OpenAI:
+    global client
+
+    if client is None:
+        client = OpenAI()
+
+    return client
 
 
 # -------------------------------------------------------------------
@@ -131,6 +140,7 @@ def cosine_similarity(a: list[float], b: list[float]) -> float:
 
 
 def get_embedding(text: str) -> list[float]:
+    client = get_openai_client()
     response = client.embeddings.create(
         model=EMBEDDING_MODEL,
         input=text,

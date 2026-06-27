@@ -16,7 +16,16 @@ from analytics.ai_metric_query import (
 )
 
 
-client = OpenAI()
+client: OpenAI | None = None
+
+
+def get_openai_client() -> OpenAI:
+    global client
+
+    if client is None:
+        client = OpenAI()
+
+    return client
 
 
 TOOLS = [
@@ -215,6 +224,7 @@ Known metrics:
     ]
 
     for _ in range(10):
+        client = get_openai_client()
         response = client.chat.completions.create(
             model="gpt-4.1-mini",
             messages=messages,

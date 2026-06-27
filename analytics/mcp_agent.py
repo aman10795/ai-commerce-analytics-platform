@@ -15,7 +15,16 @@ from analytics.ai_metric_query import log_execution_trace, now_iso
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SERVER_PATH = PROJECT_ROOT / "mcp_server" / "server.py"
 
-client = OpenAI()
+client: OpenAI | None = None
+
+
+def get_openai_client() -> OpenAI:
+    global client
+
+    if client is None:
+        client = OpenAI()
+
+    return client
 
 
 TOOLS = [
@@ -265,6 +274,7 @@ Use this only to resolve follow-up questions like:
             ]
 
             for _ in range(10):
+                client = get_openai_client()
                 response = client.chat.completions.create(
                     model="gpt-4.1-mini",
                     messages=messages,
