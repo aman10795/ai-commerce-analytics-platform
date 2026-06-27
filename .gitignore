@@ -1,19 +1,24 @@
 # =========================
-# Environment variables
+# Environment variables / secrets
 # =========================
 .env
+.env.*
+!.env.example
 
 # =========================
 # Python virtual environments
 # =========================
 venv/
 venvwolt/
+venvairflow/
+.venv/
 
 # =========================
 # Python cache files
 # =========================
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
 
 # =========================
 # Jupyter
@@ -26,10 +31,17 @@ __pycache__/
 .DS_Store
 
 # =========================
-# IDE
+# IDE / editor settings
 # =========================
 .vscode/
 .idea/
+
+# =========================
+# Logs and temporary files
+# =========================
+logs/
+*.log
+*.tmp
 
 # =========================
 # Generated operational artifacts
@@ -37,54 +49,36 @@ __pycache__/
 artifacts/
 
 # =========================
+# Local/private data
+# =========================
+data/private/
+data/invoices/
+data/raw_json/
+
+# =========================
 # DuckDB warehouse files
 # =========================
 data/warehouse/
 *.duckdb
+*.duckdb.wal
+*.duckdb.tmp
 *.wal
-
-# =========================
-# Raw source invoice PDFs
-# =========================
-data/invoices/
-
-# =========================
-# Raw AI extraction artifacts
-# =========================
-data/raw_json/
 
 # =========================
 # dbt generated files
 # =========================
-dbt/target/
-dbt/logs/
+target/
+dbt_packages/
+logs/dbt.log
 
-# =========================
-# Temporary files
-# =========================
-*.tmp
-*.log
-
-# dbt artifacts
 commerce_analytics_dbt/target/
 commerce_analytics_dbt/logs/
+commerce_analytics_dbt/dbt_packages/
 
-# Airflow
+# =========================
+# Airflow local files
+# =========================
 airflow/airflow.db
 airflow/logs/
 airflow/airflow.cfg
 airflow/webserver_config.py
-
-# dbt
-target/
-dbt_packages/
-
-# Python
-__pycache__/
-*.pyc
-
-# Airflow virtual environment
-venvairflow/
-
-# Private local source files
-data/private/

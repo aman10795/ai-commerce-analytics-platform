@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from analytics.ai_metric_query import run_analytics_agent
+from analytics.agent import run_analytics_agent
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]

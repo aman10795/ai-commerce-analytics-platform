@@ -1,23 +1,19 @@
-
 from pathlib import Path
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
-
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-
-
-
 from analytics.ai_metric_query import (
-    AVAILABLE_METRICS,
-    METRIC_CATALOG,
     find_similar_dimensions,
+    get_available_metrics,
+    get_metric_catalog_cached,
     search_semantic_layer,
     tool_get_dimension_values,
     tool_run_metricflow_query,
 )
 
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 mcp = FastMCP("commerce-analytics")
 
@@ -25,13 +21,13 @@ mcp = FastMCP("commerce-analytics")
 @mcp.tool()
 def list_metrics() -> list[str]:
     """List all available MetricFlow metrics."""
-    return AVAILABLE_METRICS
+    return get_available_metrics()
 
 
 @mcp.tool()
 def list_dimensions(metric_name: str) -> list[str]:
     """List dimensions available for a selected metric."""
-    return METRIC_CATALOG.get(metric_name, [])
+    return get_metric_catalog_cached().get(metric_name, [])
 
 
 @mcp.tool()
