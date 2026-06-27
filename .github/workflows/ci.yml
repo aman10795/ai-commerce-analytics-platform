@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  python-dbt-mcp-checks:
+    runs-on: ubuntu-latest
+
+    env:
+      PYTHON_VERSION: "3.11"
+      DBT_PROFILES_DIR: ${{ github.workspace }}/.github/dbt_profiles
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Python import smoke test
+        run: |
+          python -c "import analytics.ai_metric_query"
+          python -c "import analytics.mcp_agent"
+          python -c "import mcp_server.server"
+
+      - name: Install dbt dependencies
+        working-directory: commerce_analytics_dbt
+        run: |
+          dbt deps
+
+      - name: dbt parse
+        working-directory: commerce_analytics_dbt
+        run: |
+          dbt parse
+
+      - name: dbt compile
+        working-directory: commerce_analytics_dbt
+        run: |
+          dbt compile
+
+      - name: MCP server smoke test
+        run: |
+          python scripts/test_mcp_smoke.py

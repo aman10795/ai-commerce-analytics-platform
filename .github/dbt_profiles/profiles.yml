@@ -1,0 +1,7 @@
+commerce_analytics_dbt:
+  target: ci
+  outputs:
+    ci:
+      type: duckdb
+      path: ../../data/warehouse/commerce_analytics.duckdb
+      schema: marts
