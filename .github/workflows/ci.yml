@@ -58,3 +58,15 @@ jobs:
       - name: MCP server smoke test
         run: |
           python scripts/evals/test_mcp_smoke.py
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: python-dbt-mcp-checks
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Build Docker image
+        run: |
+          docker build -t ai-commerce-analytics .
