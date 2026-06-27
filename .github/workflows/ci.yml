@@ -41,6 +41,10 @@ jobs:
         run: |
           dbt deps
 
+      - name: Create DuckDB warehouse directory
+        run: |
+          mkdir -p data/warehouse    
+
       - name: dbt parse
         working-directory: commerce_analytics_dbt
         run: |

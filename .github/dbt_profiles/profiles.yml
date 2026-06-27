@@ -3,5 +3,5 @@ commerce_analytics_dbt:
   outputs:
     ci:
       type: duckdb
-      path: ../../data/warehouse/commerce_analytics.duckdb
+      path: "{{ env_var('GITHUB_WORKSPACE') }}/data/warehouse/commerce_analytics.duckdb"
       schema: marts
