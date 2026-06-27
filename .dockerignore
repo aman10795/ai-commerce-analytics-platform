@@ -1,0 +1,43 @@
+# Git
+.git
+.github
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+venvwolt/
+venvairflow/
+.venv/
+env/
+venv/
+
+# Environment files
+.env
+
+# Local databases and generated warehouse files
+data/warehouse/*.duckdb
+data/warehouse/*.duckdb.wal
+data/warehouse/*.duckdb.tmp
+data/warehouse/backups/
+
+# Private raw fixture
+data/demo/raw_document_extractions_raw.jsonl
+
+# Logs and artifacts
+logs/
+artifacts/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Notebooks checkpoints
+.ipynb_checkpoints/

@@ -1,0 +1,7 @@
+commerce_analytics_dbt:
+  target: demo
+  outputs:
+    demo:
+      type: duckdb
+      path: /app/data/warehouse/commerce_analytics_demo.duckdb
+      threads: 4
