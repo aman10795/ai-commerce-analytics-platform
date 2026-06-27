@@ -82,3 +82,16 @@ airflow/airflow.db
 airflow/logs/
 airflow/airflow.cfg
 airflow/webserver_config.py
+
+
+# Private raw fixture exported from local DuckDB
+data/demo/raw_document_extractions_raw.jsonl
+
+# Local DuckDB warehouse files
+data/warehouse/*.duckdb
+data/warehouse/*.duckdb.wal
+data/warehouse/*.duckdb.tmp
+
+# Real source documents
+data/input/
+data/pdfs/

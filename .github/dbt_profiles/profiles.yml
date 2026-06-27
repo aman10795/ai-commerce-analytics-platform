@@ -1,7 +1,7 @@
 commerce_analytics_dbt:
-  target: ci
+  target: demo
   outputs:
-    ci:
+    demo:
       type: duckdb
-      path: "{{ env_var('GITHUB_WORKSPACE') }}/data/warehouse/commerce_analytics.duckdb"
-      schema: marts
+      path: "{{ env_var('GITHUB_WORKSPACE') }}/data/warehouse/commerce_analytics_demo.duckdb"
+      threads: 4
