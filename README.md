@@ -1,4 +1,5 @@
-![CI](https://github.com/<aman10795>/<https://github.com/aman10795/ai-commerce-analytics-platform>/actions/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/aman10795/ai-commerce-analytics-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/aman10795/ai-commerce-analytics-platform/actions/workflows/ci.yml)
+
 # AI Commerce Analytics Platform
 
 An AI-native analytics engineering project that turns unstructured food-delivery documents into governed analytics models and exposes them through a semantic-layer-powered AI assistant.
@@ -62,6 +63,10 @@ The platform currently supports:
 * Streamlit chat-style analytics UI
 * Tool-call tracing and execution logs
 * Evaluation scripts for the AI agent and MCP agent
+* Anonymized demo data
+* Dockerized local demo environment
+* GitHub Actions CI/CD
+* Docker image publishing to GitHub Container Registry
 
 ---
 
@@ -124,6 +129,8 @@ flowchart TD
 | Layer        | Model                          | Purpose                                                                                       |
 | ------------ | ------------------------------ | --------------------------------------------------------------------------------------------- |
 | Raw          | `raw.raw_document_extractions` | Stores extracted document-level JSON                                                          |
+| Raw          | `raw.raw_file_registry`        | Tracks source file ingestion metadata                                                         |
+| Raw          | `raw.raw_ingestion_log`        | Tracks ingestion runs and load status                                                         |
 | Intermediate | `int_food_delivery_components` | Normalizes extracted components such as items, modifiers, fees, discounts, refunds, and taxes |
 | Mart         | `fct_orders`                   | One row per food-delivery order                                                               |
 | Mart         | `fct_order_lines`              | One row per order item or modifier                                                            |
@@ -180,7 +187,7 @@ The final AI assistant uses an MCP-powered architecture. The agent interprets th
 
 ```mermaid
 flowchart TD
-    A["User question<br/>Example: Show spend by merchant"] --> B["Streamlit chat UI<br/>scripts/streamlit_app.py"]
+    A["User question<br/>Example: Show spend by merchant"] --> B["Streamlit chat UI<br/>scripts/agent/streamlit_app.py"]
 
     B --> C["MCP-powered AI agent<br/>analytics/mcp_agent.py"]
     C --> D["OpenAI tool-calling loop<br/>interprets question and selects tools"]
@@ -264,7 +271,7 @@ MCP also improves:
 
 ## 9. Streamlit AI Assistant
 
-The Streamlit app provides a chat-style interface where each question appears as a separate response card.
+The Streamlit app provides a chat-style interface where each user question appears as a separate response card.
 
 Each response card shows:
 
@@ -279,10 +286,10 @@ Each response card shows:
 * execution trace
 * full agent tool calls
 
-Run the app with:
+Run the Streamlit app locally with:
 
 ```bash
-streamlit run scripts/streamlit_app.py
+streamlit run scripts/agent/streamlit_app.py
 ```
 
 Example questions:
@@ -310,12 +317,13 @@ npx @modelcontextprotocol/inspector "$(which python)" mcp_server/server.py
 
 Then open the localhost URL printed in the terminal.
 
-The Inspector allows you to manually call tools such as:
+The Inspector allows manual testing of tools such as:
 
 ```text
 list_metrics
 list_dimensions
 semantic_search
+similar_dimensions
 get_dimension_values
 run_metricflow_query
 ```
@@ -327,57 +335,203 @@ This is useful for debugging the tool layer without involving the full AI agent 
 ## 11. Project Structure
 
 ```text
-ai_commerce_analytics/
+ai-commerce-analytics-platform/
 ├── analytics/
-│   ├── ai_metric_query.py          # Core analytics tool functions
-│   ├── agent.py                    # Direct Python agent
-│   ├── mcp_agent.py                # MCP-powered AI agent
-│   └── semantic_metadata.py        # MetricFlow metadata discovery
+│   ├── ai_metric_query.py              # Core analytics tool functions
+│   ├── agent.py                        # Direct Python agent
+│   ├── mcp_agent.py                    # MCP-powered AI agent
+│   └── semantic_metadata.py            # MetricFlow metadata discovery
 │
 ├── mcp_server/
-│   └── server.py                   # MCP server exposing analytics tools
+│   └── server.py                       # MCP server exposing analytics tools
 │
 ├── commerce_analytics_dbt/
 │   ├── models/
 │   │   ├── intermediate/
 │   │   ├── marts/
-│   │   └── semantic_models/
+│   │   └── semantic/
+│   ├── seeds/
+│   ├── snapshots/
 │   ├── dbt_project.yml
 │   └── packages.yml
 │
 ├── scripts/
-│   ├── streamlit_app.py            # Streamlit UI
-│   ├── test_mcp_client.py          # MCP client sanity test
-│   ├── run_agent.py                # Direct agent terminal runner
-│   ├── run_mcp_agent.py            # MCP agent terminal runner
-│   ├── evaluate_agent.py           # Direct agent evals
-│   ├── evaluate_mcp_agent.py       # MCP agent evals
-│   └── build_semantic_index.py     # Semantic search index builder
+│   ├── agent/
+│   │   ├── streamlit_app.py            # Streamlit UI
+│   │   ├── run_agent.py                # Direct agent terminal runner
+│   │   ├── run_mcp_agent.py            # MCP agent terminal runner
+│   │   └── build_semantic_index.py     # Semantic search index builder
+│   │
+│   ├── demo/
+│   │   ├── export_raw_fixture.py       # Export private raw fixture from local DuckDB
+│   │   ├── anonymize_raw_fixture.py    # Create safe anonymized demo fixture
+│   │   └── create_demo_warehouse.py    # Build demo DuckDB warehouse
+│   │
+│   ├── evals/
+│   │   ├── evaluate_agent.py           # Direct agent evals
+│   │   ├── evaluate_mcp_agent.py       # MCP agent evals
+│   │   ├── test_mcp_client.py          # Full MCP client sanity test
+│   │   └── test_mcp_smoke.py           # CI-safe MCP smoke test
+│   │
+│   └── ingestion/
+│       ├── extract_invoice.py          # PDF extraction / LLM extraction workflow
+│       └── load_extractions_to_duckdb.py # Load extracted JSON into DuckDB raw layer
 │
 ├── data/
+│   ├── demo/
+│   │   └── raw_document_extractions_demo.jsonl # Safe anonymized demo fixture
 │   └── warehouse/
-│       └── commerce_analytics.duckdb
+│       ├── commerce_analytics.duckdb       # Local private warehouse, ignored by Git
+│       └── commerce_analytics_demo.duckdb  # Local demo warehouse, ignored by Git
 │
-├── artifacts/
-│   └── semantic_index.json
+├── .docker/
+│   └── dbt_profiles/
+│       └── profiles.yml                # Docker-specific dbt profile
 │
-├── logs/
-│   ├── agent_runs/
-│   └── evals/
+├── .github/
+│   ├── dbt_profiles/
+│   │   └── profiles.yml                # CI-specific dbt profile
+│   └── workflows/
+│       └── ci.yml                      # CI/CD pipeline
 │
+├── Dockerfile
+├── .dockerignore
 ├── requirements.txt
+├── pyproject.toml
 └── README.md
 ```
 
 ---
 
-## 12. How to Run Locally
+## 12. Demo Data and Privacy
+
+The public demo does not use private Wolt PDFs or the private local DuckDB warehouse.
+
+The demo flow uses an anonymized fixture:
+
+```text
+data/demo/raw_document_extractions_demo.jsonl
+```
+
+This file preserves the structure needed by dbt models while replacing sensitive values such as merchant names, order IDs, document IDs, file paths, hashes, and other identifiers.
+
+The private raw fixture is intentionally ignored by Git:
+
+```text
+data/demo/raw_document_extractions_raw.jsonl
+```
+
+The private local warehouse is also ignored:
+
+```text
+data/warehouse/commerce_analytics.duckdb
+```
+
+The demo warehouse can be recreated at any time with:
+
+```bash
+python scripts/demo/create_demo_warehouse.py --reset
+```
+
+Then validate it with:
+
+```bash
+cd commerce_analytics_dbt
+dbt build --target demo
+cd ..
+```
+
+---
+
+## 13. OpenAI API Key Requirement
+
+The AI assistant uses OpenAI for natural-language reasoning and tool-calling.
+
+Anyone cloning or running this repository must provide their own OpenAI API key to use the Streamlit AI assistant or terminal-based AI agents.
+
+Create a `.env` file in the project root:
+
+```env
+OPENAI_API_KEY=your_openai_api_key
+```
+
+The `.env` file is intentionally ignored by Git and should never be committed.
+
+Without an OpenAI API key, users can still inspect the code, build the Docker image, recreate the demo DuckDB warehouse, and run dbt models. However, live AI querying in Streamlit and the OpenAI-powered agents will not work.
+
+---
+
+## 14. Run with Docker
+
+The easiest way to run the project is with Docker.
+
+The Docker image creates a demo DuckDB warehouse from anonymized fixture data, runs the dbt demo build, and starts the Streamlit AI assistant.
+
+### 1. Create `.env`
+
+Create a `.env` file in the project root:
+
+```env
+OPENAI_API_KEY=your_openai_api_key
+```
+
+### 2. Build the Docker image
+
+```bash
+docker build -t ai-commerce-analytics .
+```
+
+### 3. Run the Streamlit app
+
+```bash
+docker run --env-file .env -p 8501:8501 ai-commerce-analytics
+```
+
+Open:
+
+```text
+http://localhost:8501
+```
+
+The container uses the anonymized demo environment and does not require the private local DuckDB warehouse.
+
+---
+
+## 15. Run Published Docker Image
+
+The CI/CD pipeline publishes the validated Docker image to GitHub Container Registry.
+
+Pull the latest image:
+
+```bash
+docker pull ghcr.io/aman10795/ai-commerce-analytics-platform:latest
+```
+
+Run the app:
+
+```bash
+docker run --env-file .env -p 8501:8501 ghcr.io/aman10795/ai-commerce-analytics-platform:latest
+```
+
+Open:
+
+```text
+http://localhost:8501
+```
+
+This is useful when running the project on another machine without manually installing Python, dbt, DuckDB, MetricFlow, MCP, or Streamlit.
+
+If the package is private, GitHub authentication may be required before pulling the image. For a public portfolio demo, the package visibility can be changed in GitHub Packages settings.
+
+---
+
+## 16. Run Locally Without Docker
 
 ### 1. Clone the repository
 
 ```bash
-git clone <https://github.com/aman10795/ai-commerce-analytics-platform>
-cd ai_commerce_analytics
+git clone https://github.com/aman10795/ai-commerce-analytics-platform.git
+cd ai-commerce-analytics-platform
 ```
 
 ### 2. Create and activate a virtual environment
@@ -391,11 +545,6 @@ source venvwolt/bin/activate
 
 ```bash
 pip install -r requirements.txt
-```
-
-If the project is configured as an installable package:
-
-```bash
 pip install -e .
 ```
 
@@ -409,79 +558,170 @@ OPENAI_API_KEY=your_openai_api_key
 
 ### 5. Configure dbt profiles
 
-Make sure dbt can find your profile.
+For local private development, your dbt profile should point to:
 
-Example:
-
-```bash
-export DBT_PROFILES_DIR=~/.dbt
+```text
+data/warehouse/commerce_analytics.duckdb
 ```
 
-The dbt profile should point to the local DuckDB warehouse.
+For demo development, your dbt profile should include a `demo` target pointing to:
 
-### 6. Run dbt models
+```text
+data/warehouse/commerce_analytics_demo.duckdb
+```
+
+Example local profile:
+
+```yaml
+commerce_analytics_dbt:
+  outputs:
+    dev:
+      type: duckdb
+      path: /absolute/path/to/ai-commerce-analytics-platform/data/warehouse/commerce_analytics.duckdb
+      threads: 4
+
+    demo:
+      type: duckdb
+      path: /absolute/path/to/ai-commerce-analytics-platform/data/warehouse/commerce_analytics_demo.duckdb
+      threads: 4
+
+  target: dev
+```
+
+### 6. Rebuild the private warehouse from extracted JSON files
+
+```bash
+python scripts/ingestion/load_extractions_to_duckdb.py
+```
+
+Then run:
 
 ```bash
 cd commerce_analytics_dbt
 dbt deps
 dbt build
+cd ..
 ```
 
-### 7. Test MetricFlow
+### 7. Rebuild the demo warehouse
 
 ```bash
+python scripts/demo/create_demo_warehouse.py --reset
+
+cd commerce_analytics_dbt
+dbt build --target demo
+cd ..
+```
+
+### 8. Test MetricFlow
+
+```bash
+cd commerce_analytics_dbt
 mf list metrics
 mf query --metrics total_spend
+cd ..
 ```
 
-### 8. Build the semantic index
-
-From the project root:
+### 9. Build the semantic index
 
 ```bash
-python scripts/build_semantic_index.py
+python scripts/agent/build_semantic_index.py
 ```
 
-### 9. Test the MCP server
+### 10. Test the MCP server
+
+CI-safe smoke test:
 
 ```bash
-python scripts/test_mcp_client.py
+python scripts/evals/test_mcp_smoke.py
 ```
 
-### 10. Run MCP Inspector
+Full MCP client test:
 
 ```bash
-npx @modelcontextprotocol/inspector "$(which python)" mcp_server/server.py
+python scripts/evals/test_mcp_client.py
 ```
 
 ### 11. Run the MCP agent from terminal
 
 ```bash
-python scripts/run_mcp_agent.py
+python scripts/agent/run_mcp_agent.py
 ```
 
 ### 12. Run Streamlit
 
 ```bash
-streamlit run scripts/streamlit_app.py
+streamlit run scripts/agent/streamlit_app.py
 ```
 
 ---
 
-## 13. Evaluation
+## 17. CI/CD
+
+The project includes a GitHub Actions pipeline that validates the analytics and application stack on every push and pull request.
+
+The pipeline currently performs:
+
+```text
+Python dependency installation
+Python import smoke tests
+Demo DuckDB warehouse creation
+dbt parse on demo target
+dbt build on anonymized demo data
+MCP server smoke test
+Docker image build
+Docker image publish to GitHub Container Registry on push
+```
+
+The CI/CD pipeline has two main jobs:
+
+```text
+python-dbt-mcp-checks
+docker-publish
+```
+
+### CI
+
+CI validates that the project still works after code changes.
+
+It checks:
+
+* the Python package installs
+* dbt dependencies resolve
+* the demo warehouse can be recreated
+* dbt models and tests pass on demo data
+* the MCP server exposes the expected tools
+* the Docker image can be built
+
+### CD
+
+CD publishes a validated Docker image to GitHub Container Registry.
+
+This allows the project to be run from a published image instead of rebuilding locally.
+
+Example:
+
+```bash
+docker pull ghcr.io/aman10795/ai-commerce-analytics-platform:latest
+docker run --env-file .env -p 8501:8501 ghcr.io/aman10795/ai-commerce-analytics-platform:latest
+```
+
+---
+
+## 18. Evaluation
 
 The project includes evaluation scripts to check whether the agents use the expected tools and successfully execute MetricFlow queries.
 
 Run direct agent evals:
 
 ```bash
-python scripts/evaluate_agent.py
+python scripts/evals/evaluate_agent.py
 ```
 
 Run MCP agent evals:
 
 ```bash
-python scripts/evaluate_mcp_agent.py
+python scripts/evals/evaluate_mcp_agent.py
 ```
 
 Evaluation checks include:
@@ -516,7 +756,7 @@ logs/agent_runs/
 
 ---
 
-## 14. Example MetricFlow Query
+## 19. Example MetricFlow Query
 
 A user may ask:
 
@@ -543,7 +783,7 @@ The tool result includes:
   "metricflow_command": "mf query --metrics total_spend --group-by order__merchant_name",
   "data": [
     {
-      "order__merchant_name": "The Biryani Club",
+      "order__merchant_name": "Demo Burger House",
       "total_spend": 24.25
     }
   ],
@@ -555,7 +795,7 @@ This makes the assistant transparent and auditable.
 
 ---
 
-## 15. Key Design Decisions
+## 20. Key Design Decisions
 
 ### dbt for transformation logic
 
@@ -573,43 +813,59 @@ MCP exposes analytics capabilities as reusable tools that can be called by diffe
 
 The UI shows not only the answer, but also the query plan, MetricFlow command, results, charts, and tool traces.
 
+### Docker for reproducibility
+
+Docker packages the application, dependencies, dbt project, demo data, and Streamlit runtime into a reproducible environment.
+
+### CI/CD for production readiness
+
+GitHub Actions validates the dbt demo build, MCP server, and Docker image. The CD step publishes a runnable Docker image to GitHub Container Registry.
+
+### Demo data for safe reproducibility
+
+The public repository uses anonymized demo data so the project can be built and tested without exposing private order history or real document contents.
+
 ### Lazy metadata loading
 
-MetricFlow metadata is loaded lazily so that MCP Inspector can connect quickly without timing out.
+MetricFlow metadata and OpenAI clients are loaded lazily so that imports, MCP smoke tests, and CI checks can run without unnecessary startup failures.
 
 ---
 
-## 16. Current Limitations
+## 21. Current Limitations
 
-* The current dataset is local and personal in scope.
+* The public demo uses anonymized sample data rather than the full private dataset.
 * The project currently uses DuckDB rather than a cloud warehouse.
 * Semantic search depends on a locally generated embedding index.
 * The MCP server currently uses stdio transport.
 * The system is designed for analytics queries, not arbitrary SQL exploration.
+* Docker currently runs a single-container demo architecture.
+* The published Docker image still requires a user-provided OpenAI API key for live AI querying.
 * Some natural-language questions may require additional semantic metadata or improved agent instructions.
 
 ---
 
-## 17. Future Improvements
+## 22. Future Improvements
 
 Potential next steps:
 
 * Add more delivery platforms beyond Wolt.
-* Add richer order-line analytics.
+* Expand semantic models for order lines and order items.
+* Add richer item-level and category-level analytics.
+* Add graph analytics over orders, merchants, items, and categories.
 * Add forecasting tools for spend prediction.
+* Expose forecasting and graph analytics through MCP tools.
 * Add anomaly detection for unusual orders or fees.
 * Add cost and latency monitoring for LLM calls.
 * Add LangGraph-based agent orchestration.
 * Add a cloud warehouse version using BigQuery or Snowflake.
-* Add Docker setup for easier local deployment.
-* Add CI checks for dbt tests and agent evals.
 * Add more robust semantic search over dbt docs and model metadata.
 * Add support for authentication and multi-user deployment.
 * Add screenshots and demo GIFs to the README.
+* Add optional hosted deployment using Cloud Run, Render, Railway, or Azure Container Apps.
 
 ---
 
-## 18. Skills Demonstrated
+## 23. Skills Demonstrated
 
 This project demonstrates:
 
@@ -622,13 +878,17 @@ This project demonstrates:
 * AI agent tool orchestration
 * MCP server/client architecture
 * Streamlit product UI
+* Docker containerization
+* CI/CD with GitHub Actions
+* GitHub Container Registry publishing
+* Demo data anonymization
 * Evaluation-driven AI development
 * Data quality and traceability
 * Modular software design
 
 ---
 
-## 19. Summary
+## 24. Summary
 
 This project demonstrates how an AI analytics assistant can be built on top of a governed semantic layer rather than directly generating SQL.
 
@@ -642,6 +902,8 @@ MetricFlow
 MCP
 OpenAI tool calling
 Streamlit
+Docker
+GitHub Actions CI/CD
 Evaluation scripts
 ```
 
