@@ -1,0 +1,198 @@
+version: 1
+
+rules:
+  - id: generic_spend_vs_item_spend
+    title: Generic Spend vs Item Spend
+    description: >
+      Use total_spend for generic spend, money, expenses, total paid, or overall
+      order value. Use item_total_spend when the user explicitly asks about
+      items, products, grocery items, alcohol items, or top item analysis.
+    business_terms:
+      - spend
+      - money
+      - expenses
+      - total paid
+      - overall order value
+      - items
+      - products
+      - grocery items
+      - alcohol items
+      - top item
+    synonyms:
+      spend:
+        - money
+        - cost
+        - paid
+        - expenses
+      shop:
+        - merchant
+        - store
+        - vendor
+      item:
+        - product
+        - grocery item
+        - alcohol item
+    examples:
+      - question: money by shop
+        resolution: total_spend by merchant
+      - question: top grocery items by spend
+        resolution: item_total_spend by order_line__item_name
+    valid_metrics:
+      - total_spend
+      - item_total_spend
+    valid_dimensions:
+      - order__merchant_name
+      - merchant__merchant_name
+      - order_line__item_name
+
+  - id: item_vs_category_grouping
+    title: Item vs Category Grouping
+    description: >
+      If the user asks for items or products, group by item name. Prefer
+      order_line__item_name for item-level rankings. Use category, type,
+      subtype, or component group dimensions only when the user asks for those
+      grouping levels explicitly.
+    business_terms:
+      - item
+      - product
+      - grocery item
+      - alcohol item
+      - category
+      - type
+      - subtype
+      - component group
+    synonyms:
+      item:
+        - product
+        - line item
+        - purchased item
+      category:
+        - type
+        - subtype
+        - component group
+    examples:
+      - question: Which alcohol item did I spend the most on?
+        resolution: item_total_spend by order_line__item_name filtered to alcohol
+      - question: spend by item category
+        resolution: item_total_spend by category or subtype dimension
+    valid_metrics:
+      - item_total_spend
+      - item_count
+      - item_quantity
+    valid_dimensions:
+      - order_line__item_name
+      - order_line__order_category
+      - order_line__component_subtype
+      - order_line__component_type
+      - order_line__food_delivery_component_group
+
+  - id: value_aware_filtering
+    title: Value Aware Filtering
+    description: >
+      If the user mentions a value like Berlin, grocery, alcohol, merchant name,
+      platform, or payment method, compare against actual dimension values. It is
+      acceptable to use order_line__order_category = grocery if the value
+      grocery exists and the user is filtering grocery items. It is also
+      acceptable to use contains_grocery = true when appropriate.
+    business_terms:
+      - Berlin
+      - grocery
+      - alcohol
+      - merchant
+      - platform
+      - payment method
+      - city
+    synonyms:
+      city:
+        - area
+        - location
+        - place
+      grocery:
+        - supermarket
+        - food staples
+        - household shopping
+      alcohol:
+        - beer
+        - wine
+        - liquor
+        - alcoholic drink
+    examples:
+      - question: How many orders did I have in Berlin with alcohol?
+        resolution: order_count filtered by order__residence_city = Berlin and contains_alcohol = true
+      - question: top grocery items by spend
+        resolution: item_total_spend by order_line__item_name filtered by grocery value or grocery flag
+    valid_metrics: []
+    valid_dimensions:
+      - order__residence_city
+      - order_line__residence_city
+      - order__merchant_name
+      - order_line__merchant_name
+      - merchant__merchant_name
+      - order__order_category
+      - order_line__order_category
+      - order_line__item_name
+      - order__payment_method
+      - order__source_platform
+      - order__contains_grocery
+      - order_line__contains_grocery
+      - order__contains_alcohol
+      - order_line__contains_alcohol
+
+  - id: calendar_grain_rule
+    title: Calendar Grain Rule
+    description: >
+      Calendar terms like month, week, quarter, and year should be passed as
+      time_granularity, not as semantic dimensions.
+    business_terms:
+      - month
+      - monthly
+      - week
+      - weekly
+      - quarter
+      - quarterly
+      - year
+      - yearly
+      - trend
+    synonyms:
+      month:
+        - monthly
+      week:
+        - weekly
+      quarter:
+        - quarterly
+      year:
+        - yearly
+    examples:
+      - question: spend by month
+        resolution: total_spend with time_granularity = month
+      - question: weekly order count
+        resolution: order_count with time_granularity = week
+    valid_metrics: []
+    valid_dimensions:
+      - metric_time
+
+  - id: metric_dimension_compatibility
+    title: Metric Dimension Compatibility
+    description: >
+      Only return dimensions that are valid for the selected MetricFlow metric.
+      MetricFlow remains the source of truth for whether a metric can be grouped
+      or filtered by a dimension.
+    business_terms:
+      - compatible dimension
+      - valid dimension
+      - metric dimension
+      - group by
+      - filter by
+    synonyms:
+      dimension:
+        - field
+        - grouping
+        - breakdown
+        - filter
+    examples:
+      - question: spend by city
+        resolution: choose a city dimension that is valid for total_spend
+      - question: item spend by merchant
+        resolution: choose a merchant dimension that is valid for item_total_spend
+    valid_metrics: []
+    valid_dimensions: []

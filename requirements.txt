@@ -1,5 +1,7 @@
 openai
 python-dotenv
+llama-index
+llama-index-embeddings-openai
 
 pandas
 numpy
@@ -17,4 +19,3 @@ dbt-metricflow
 
 mcp
 streamlit
-
