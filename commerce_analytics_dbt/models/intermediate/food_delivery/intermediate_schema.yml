@@ -73,7 +73,7 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: ['item', 'modifier', 'delivery_fee', 'service_fee', 'tip', 'discount', 'deposit', 'refund', 'tax', 'other_fee','unknown  ']
+                values: ['item', 'modifier', 'delivery_fee', 'service_fee', 'tip', 'discount', 'deposit', 'refund', 'tax', 'other_fee','unknown']
 
     tests:
       - dbt_utils.unique_combination_of_columns:

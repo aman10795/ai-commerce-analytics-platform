@@ -70,12 +70,21 @@ def extract_metric_descriptions() -> dict[str, str]:
     return descriptions
 
 
+def get_primary_entity_name(semantic_model: dict[str, Any]) -> str | None:
+    for entity in semantic_model.get("entities", []):
+        if entity.get("type") == "primary" and entity.get("name"):
+            return entity["name"]
+
+    return None
+
+
 def extract_dimension_descriptions() -> dict[str, str]:
     descriptions = {}
 
     for data in load_yaml_files():
         for semantic_model in data.get("semantic_models", []):
             semantic_model_name = semantic_model.get("name")
+            primary_entity_name = get_primary_entity_name(semantic_model)
 
             for dimension in semantic_model.get("dimensions", []):
                 dimension_name = dimension.get("name")
@@ -84,8 +93,17 @@ def extract_dimension_descriptions() -> dict[str, str]:
                 if not semantic_model_name or not dimension_name:
                     continue
 
-                full_dimension_name = f"{semantic_model_name}__{dimension_name}"
-                descriptions[full_dimension_name] = description or ""
+                # MetricFlow exposes dimensions using the primary entity prefix
+                # when a semantic model has a primary entity, e.g.
+                # order__merchant_name instead of food_delivery_orders__merchant_name.
+                # Keep both keys so the semantic index can find descriptions
+                # regardless of how the dimension appears in metadata.
+                model_prefixed_name = f"{semantic_model_name}__{dimension_name}"
+                descriptions[model_prefixed_name] = description or ""
+
+                if primary_entity_name:
+                    entity_prefixed_name = f"{primary_entity_name}__{dimension_name}"
+                    descriptions[entity_prefixed_name] = description or ""
 
     return descriptions
 

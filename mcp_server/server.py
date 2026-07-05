@@ -8,6 +8,7 @@ from analytics.ai_metric_query import (
     get_available_metrics,
     get_metric_catalog_cached,
     search_semantic_layer,
+    tool_discover_dimension_candidates,
     tool_get_dimension_values,
     tool_run_metricflow_query,
 )
@@ -58,6 +59,23 @@ def similar_dimensions(
     )
 
 
+
+
+@mcp.tool()
+def discover_dimension_candidates(
+    user_term: str,
+    metric_name: str | None = None,
+    role: str = "any",
+    limit_per_dimension: int = 20,
+) -> dict[str, Any]:
+    """Discover candidate semantic dimensions for a user term using names, semantic metadata, and values."""
+    return tool_discover_dimension_candidates(
+        user_term=user_term,
+        metric_name=metric_name,
+        role=role,
+        limit_per_dimension=limit_per_dimension,
+    )
+
 @mcp.tool()
 def get_dimension_values(
     dimension_name: str,
@@ -75,12 +93,18 @@ def run_metricflow_query(
     metrics: list[str],
     group_by: list[str] | None = None,
     filters: list[dict[str, Any]] | None = None,
+    time_granularity: str | None = None,
+    order_by: list[dict[str, Any]] | None = None,
+    limit: int | None = None,
 ) -> dict[str, Any]:
-    """Run a MetricFlow query using metrics, group-by dimensions, and filters."""
+    """Run a MetricFlow query using metrics, dimensions, filters, optional time grain, ordering, and limit."""
     return tool_run_metricflow_query(
         metrics=metrics,
         group_by=group_by or [],
         filters=filters or [],
+        time_granularity=time_granularity,
+        order_by=order_by or [],
+        limit=limit,
     )
 
 

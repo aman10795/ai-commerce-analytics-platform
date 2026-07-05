@@ -20,7 +20,10 @@ flattened as (
         c.value->>'component_subtype' as component_subtype,
         try_cast(c.value->>'quantity' as double) as quantity,
         try_cast(c.value->>'unit_price' as double) as unit_price,
-        try_cast(c.value->>'gross_amount' as double) as gross_amount,
+        coalesce(
+        try_cast(c.value->>'gross_amount' as double),
+        Coalesce(try_cast(c.value->>'unit_price' as double),'0') * coalesce(try_cast(c.value->>'quantity' as double), 1)
+        ) as gross_amount,        
         try_cast(c.value->>'net_amount' as double) as net_amount,
         try_cast(c.value->>'tax_rate' as double) as tax_rate,
         try_cast(c.value->>'tax_amount' as double) as tax_amount,

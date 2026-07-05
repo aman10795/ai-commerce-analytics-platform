@@ -140,6 +140,7 @@ orders as (
         sum(coalesce(tax_total_amount, 0)) as tax_total_amount,
         sum(coalesce(deposit_total_amount, 0)) as deposit_total_amount,
         sum(coalesce(refund_total_amount, 0)) as refund_total_amount,
+        max(document_total_amount) as document_total_amount,
 
         max(loaded_at) as latest_loaded_at
 

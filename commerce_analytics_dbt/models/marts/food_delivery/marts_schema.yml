@@ -12,3 +12,38 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: fct_order_lines
+    description: "Gold fact table at item/product line grain. One row represents one purchased item or modifier."
+    columns:
+      - name: order_line_key
+        description: "Surrogate primary key for the order line."
+        tests:
+          - not_null
+          - unique
+
+      - name: order_key
+        description: "Foreign key to fct_orders."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fct_orders')
+              field: order_key
+
+      - name: merchant_key
+        description: "Foreign key to dim_merchants."
+        tests:
+          - relationships:
+              to: ref('dim_merchants')
+              field: merchant_key
+
+      - name: item_name
+        description: "Purchased item, product, food item, drink, grocery item, or modifier name."
+        tests:
+          - not_null
+
+      - name: quantity
+        description: "Purchased item quantity. Defaults to 1 when missing from source extraction."
+
+      - name: gross_amount
+        description: "Gross item-level amount before order-level fees, delivery, tips, discounts, and refunds."

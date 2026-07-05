@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 import duckdb
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RAW_JSON_DIR = PROJECT_ROOT / "data" / "raw_json" / "ai_extractions"
 

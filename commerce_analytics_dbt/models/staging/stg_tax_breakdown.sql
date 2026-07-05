@@ -16,8 +16,11 @@ select
     t.value->>'tax_type' as tax_type,
     try_cast(t.value->>'tax_rate' as double) as tax_rate,
     try_cast(t.value->>'taxable_net_amount' as double) as taxable_net_amount,
-    try_cast(t.value->>'tax_amount' as double) as tax_amount,
-    try_cast(t.value->>'gross_amount' as double) as gross_amount,
+    coalesce(try_cast(t.value->>'tax_amount' as double),1) as tax_amount,
+    coalesce(
+        try_cast(t.value->>'gross_amount' as double),
+        Coalesce(try_cast(t.value->>'unit_price' as double),'0') * coalesce(try_cast(t.value->>'quantity' as double), 1)
+        ) as gross_amount,  
     t.value->>'source_evidence' as source_evidence,
     try_cast(t.value->>'source_page' as integer) as source_page,
     try_cast(t.value->>'extraction_confidence' as double) as extraction_confidence

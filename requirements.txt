@@ -9,6 +9,7 @@ sqlalchemy
 psycopg2-binary
 
 pymupdf
+pyyaml
 
 dbt-core
 dbt-duckdb

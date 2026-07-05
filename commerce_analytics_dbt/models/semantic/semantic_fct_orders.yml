@@ -101,7 +101,7 @@ semantic_models:
 
       - name: total_spend_measure
         agg: sum
-        expr: calculated_order_total_amount
+        expr: document_total_amount
         description: "Sum of calculated total order amount across orders."
 
       - name: items_total_measure

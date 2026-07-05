@@ -1,0 +1,345 @@
+# Agent MetricFlow regression cases
+#
+# Put this file at:
+#   evals/agent_metricflow_cases.yml
+#
+# Purpose:
+#   These cases validate the MCP analytics agent at the execution-plan level:
+#   intent, metric selection, group_by selection, filters, time_granularity,
+#   ranking/order_by, limit, and MetricFlow success.
+#
+# Notes:
+#   - group_by means non-time semantic breakdown dimensions.
+#   - time_granularity is separate from group_by.
+#   - For calendar questions like "by month", expect time_granularity: month,
+#     not group_by: metric_time__month.
+#   - group_by_any_of allows multiple acceptable semantic dimensions when the
+#     semantic layer exposes equivalent/order-context and entity-context fields.
+#   - filter dimension_any_of allows equivalent order-level vs order-line-level
+#     context fields when both are valid for a metric.
+
+cases:
+- id: basic_total_spend
+  question: How much money did I spend?
+  reason: Basic metric-only query. The agent must execute MetricFlow and not ask a
+    follow-up.
+  expected:
+    intent: metric_query
+    metrics:
+    - total_spend
+    group_by: []
+    filters: []
+    time_granularity: null
+    metricflow_success: true
+- id: basic_total_spend_short
+  question: total spend
+  reason: Short metric-only query that historically caused the agent to list metrics
+    instead of execute.
+  expected:
+    intent: metric_query
+    metrics:
+    - total_spend
+    group_by: []
+    filters: []
+    time_granularity: null
+    metricflow_success: true
+- id: basic_order_count
+  question: total orders count
+  reason: Basic count metric query.
+  expected:
+    intent: metric_query
+    metrics:
+    - order_count
+    group_by: []
+    filters: []
+    time_granularity: null
+    metricflow_success: true
+- id: refund_ratio
+  question: What is my refund ratio?
+  reason: Simple ratio metric query.
+  expected:
+    intent: metric_query
+    metrics:
+    - refund_ratio
+    group_by: []
+    filters: []
+    time_granularity: null
+    metricflow_success: true
+- id: spend_by_month
+  question: spend by month
+  reason: 'Critical time-grain regression: month must be represented as time_granularity,
+    not as a normal dimension.'
+  expected:
+    intent: metric_query
+    metrics:
+    - total_spend
+    group_by: []
+    filters: []
+    time_granularity: month
+    metricflow_success: true
+- id: monthly_spend_trend
+  question: What was my monthly spend trend?
+  reason: Trend wording should map to monthly time granularity.
+  expected:
+    intent: metric_query
+    metrics:
+    - total_spend
+    group_by: []
+    filters: []
+    time_granularity: month
+    metricflow_success: true
+- id: spend_by_week
+  question: spend by week
+  reason: Generic weekly time-grain query.
+  expected:
+    intent: metric_query
+    metrics:
+    - total_spend
+    group_by: []
+    filters: []
+    time_granularity: week
+    metricflow_success: true
+- id: spend_by_city
+  question: Show spend by city.
+  reason: 'Core group_by selection: city should map to residence city.'
+  expected:
+    intent: metric_query
+    metrics:
+    - total_spend
+    group_by:
+    - order__residence_city
+    filters: []
+    time_granularity: null
+    metricflow_success: true
+- id: discount_ratio_by_city
+  question: Show discount ratio by city.
+  reason: Ratio metric with city breakdown.
+  expected:
+    intent: metric_query
+    metrics:
+    - discount_ratio
+    group_by:
+    - order__residence_city
+    filters: []
+    time_granularity: null
+    metricflow_success: true
+- id: spend_by_merchant
+  question: Show total spend by merchant.
+  reason: Core merchant group_by. Either order-context merchant or merchant entity
+    dimension is acceptable if MetricFlow validates it.
+  expected:
+    intent: metric_query
+    metrics:
+    - total_spend
+    group_by_any_of:
+    - - order__merchant_name
+    - - merchant__merchant_name
+    filters: []
+    time_granularity: null
+    metricflow_success: true
+- id: money_by_shop_synonym
+  question: money by shop
+  reason: 'Synonym mapping: money -> spend, shop -> merchant.'
+  expected:
+    intent: metric_query
+    metrics:
+    - total_spend
+    group_by_any_of:
+    - - order__merchant_name
+    - - merchant__merchant_name
+    filters: []
+    time_granularity: null
+    metricflow_success: true
+- id: spend_by_career_stage
+  question: Show total spend by career stage.
+  reason: Career stage should map to user timeline dimension.
+  expected:
+    intent: metric_query
+    metrics:
+    - total_spend
+    group_by:
+    - order__career_stage
+    filters: []
+    time_granularity: null
+    metricflow_success: true
+- id: spend_by_order_type
+  question: spend by different order subtype
+  reason: Subtype wording should map to order_type.
+  expected:
+    intent: metric_query
+    metrics:
+    - total_spend
+    group_by:
+    - order__order_type
+    filters: []
+    time_granularity: null
+    metricflow_success: true
+- id: berlin_alcohol_order_count
+  question: How many orders did I have in Berlin with alcohol?
+  reason: 'Value-aware filter discovery: Berlin city value and alcohol boolean flag.'
+  expected:
+    intent: metric_query
+    metrics:
+    - order_count
+    group_by: []
+    time_granularity: null
+    metricflow_success: true
+    filters:
+    - dimension: order__residence_city
+      operator: '='
+      value: Berlin
+    - dimension: order__contains_alcohol
+      operator: '='
+      value: true
+- id: grocery_order_count
+  question: How many orders included grocery?
+  reason: Boolean grocery filter.
+  expected:
+    intent: metric_query
+    metrics:
+    - order_count
+    group_by: []
+    time_granularity: null
+    metricflow_success: true
+    filters:
+    - dimension: order__contains_grocery
+      operator: '='
+      value: true
+- id: alcohol_item_spend
+  question: what is total spend on alcohol items
+  reason: Item wording should prefer item-level spend metric if available.
+  expected:
+    intent: metric_query
+    metrics:
+    - item_total_spend
+    group_by: []
+    time_granularity: null
+    metricflow_success: true
+    filters:
+    - dimension_any_of:
+      - order__contains_alcohol
+      - order_line__contains_alcohol
+      operator: '='
+      value: true
+- id: top_alcohol_item
+  question: Which alcohol item did I spend the most on?
+  reason: 'Top item pattern: item-level metric, item-name grouping, alcohol filter.'
+  expected:
+    intent: metric_query
+    metrics:
+    - item_total_spend
+    group_by_any_of:
+    - - order_line__item_name
+    - - order_item__item_name
+    - - item__item_name
+    - - order__item_name
+    time_granularity: null
+    metricflow_success: true
+    filters:
+    - dimension_any_of:
+      - order__contains_alcohol
+      - order_line__contains_alcohol
+      operator: '='
+      value: true
+    order_by:
+    - field: item_total_spend
+      direction: desc
+    limit: 1
+- id: top_grocery_items
+  question: Show my top grocery items by spend.
+  reason: 'Historical hard case: top grocery items should use item grain, not order
+    category alone.'
+  expected:
+    intent: metric_query
+    metrics:
+    - item_total_spend
+    group_by_any_of:
+    - - order_line__item_name
+    - - order_item__item_name
+    - - item__item_name
+    - - order__item_name
+    time_granularity: null
+    metricflow_success: true
+    filters:
+    - dimension_any_of:
+      - order_line__order_category
+      - order_line__contains_grocery
+      operator: '='
+      value_any_of:
+      - true
+      - grocery
+    order_by:
+    - field: item_total_spend
+      direction: desc
+- id: monthly_grocery_spend_berlin_by_merchant
+  question: show monthly grocery spend in Berlin by merchant
+  reason: 'Combined hard case: metric + monthly time grain + city filter + grocery
+    filter + merchant group_by.'
+  expected:
+    intent: metric_query
+    metrics:
+    - item_total_spend
+    group_by_any_of:
+    - - order__merchant_name
+    - - merchant__merchant_name
+    - - order__merchant__merchant_name
+    time_granularity: month
+    metricflow_success: true
+    filters:
+    - dimension_any_of:
+      - order__contains_grocery
+      - order_line__contains_grocery
+      operator: '='
+      value: true
+    - dimension_any_of:
+      - order__residence_city
+      - order_line__residence_city
+      operator: '='
+      value: Berlin
+- id: item_highest_spend_berlin
+  question: item with highest spend in berlin
+  reason: Item-level grain with city filter.
+  expected:
+    intent: metric_query
+    metrics:
+    - item_total_spend
+    group_by_any_of:
+    - - order_line__item_name
+    - - order_item__item_name
+    - - item__item_name
+    - - order__item_name
+    time_granularity: null
+    metricflow_success: true
+    filters:
+    - dimension_any_of:
+      - order__residence_city
+      - order_line__residence_city
+      operator: '='
+      value: Berlin
+    order_by:
+    - field: item_total_spend
+      direction: desc
+    limit: 1
+- id: compare_alcohol_vs_grocery_items
+  question: compare my spend for alcohol vs grocery items
+  reason: 'Comparison case: acceptable as two filtered MetricFlow calls or equivalent
+    future category grouping.'
+  expected:
+    intent: metric_query
+    metrics:
+    - item_total_spend
+    group_by: []
+    time_granularity: null
+    metricflow_success: true
+    expected_metricflow_calls_min: 2
+    filters_any_call:
+    - dimension_any_of:
+      - order__contains_alcohol
+      - order_line__contains_alcohol
+      operator: '='
+      value: true
+    - dimension_any_of:
+      - order__contains_grocery
+      - order_line__contains_grocery
+      operator: '='
+      value: true

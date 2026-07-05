@@ -1,0 +1,168 @@
+version: 2
+
+semantic_models:
+  - name: food_delivery_order_lines
+    description: "Semantic model for food delivery order lines at item/product grain. One row represents one purchased item or modifier within a food delivery order. Use this model for item spend, product spend, grocery item analysis, alcohol item analysis, and product-level questions."
+    model: ref('fct_order_lines')
+
+    defaults:
+      agg_time_dimension: order_line_date
+
+    entities:
+      - name: order_line
+        type: primary
+        expr: order_line_key
+
+      - name: order
+        type: foreign
+        expr: order_key
+
+      - name: merchant
+        type: foreign
+        expr: merchant_key
+
+    dimensions:
+      - name: order_line_date
+        type: time
+        expr: order_timestamp
+        description: "Date when the order line item was purchased. Use for daily, weekly, monthly, and time trend analysis of item-level spend."
+        type_params:
+          time_granularity: day
+
+      - name: item_name
+        type: categorical
+        description: "Name of the purchased item, product, food item, drink, grocery product, or modifier. Use when users ask which item/product they bought or spent most on."
+
+      - name: component_type
+        type: categorical
+        description: "Original extracted component type from the source document, such as product_item, food_item, item, modifier, or addon."
+
+      - name: component_subtype
+        type: categorical
+        description: "More specific extracted item subtype where available, such as grocery, alcohol, drink, food, modifier, or addon."
+
+      - name: food_delivery_component_group
+        type: categorical
+        description: "Normalized business group for the line component. For this semantic model it is usually item or modifier. Use to separate main products from modifiers/add-ons."
+
+      - name: parent_component
+        type: categorical
+        description: "Parent item for modifiers or add-ons. Use when users ask which base item an add-on belongs to."
+
+      - name: currency
+        type: categorical
+        description: "Currency used for the item-level amount."
+
+      - name: source_platform
+        type: categorical
+        description: "Food delivery platform or source system where the item was purchased, such as Wolt."
+
+      - name: merchant_name
+        type: categorical
+        description: "Name of the merchant, restaurant, shop, supermarket, or store where the item was purchased."
+
+      - name: country_or_market
+        type: categorical
+        description: "Country or market associated with the order line."
+
+      - name: order_category
+        type: categorical
+        description: "High-level category of the parent order, such as restaurant food, grocery, convenience, pharmacy, alcohol, or other order types."
+
+      - name: contains_alcohol
+        type: categorical
+        description: "Boolean flag from the parent order showing whether the order included alcohol items. Use for beer, wine, liquor, alcoholic drink, or alcohol-related item analysis."
+
+      - name: contains_grocery
+        type: categorical
+        description: "Boolean flag from the parent order showing whether the order included grocery items. Use for supermarket, grocery, staple, household, or product-basket analysis."
+
+      - name: contains_restaurant_food
+        type: categorical
+        description: "Boolean flag from the parent order showing whether the order included restaurant or prepared food items."
+
+      - name: contains_pharmacy
+        type: categorical
+        description: "Boolean flag from the parent order showing whether the order included pharmacy or health-related items."
+
+      - name: contains_convenience_items
+        type: categorical
+        description: "Boolean flag from the parent order showing whether the order included convenience-store items such as snacks, drinks, or small everyday purchases."
+
+      - name: residence_city
+        type: categorical
+        description: "City associated with the user's residence or order context at the time of the item purchase. Use when users ask about product or item spend by city."
+
+      - name: career_stage
+        type: categorical
+        description: "User life or career stage associated with the item purchase period, such as student, internship, full-time work, or other personal timeline phases."
+
+    measures:
+      - name: item_count_measure
+        agg: count
+        expr: order_line_key
+        description: "Count of purchased item or modifier rows. Use for number of items/products/line items."
+
+      - name: item_quantity_measure
+        agg: sum
+        expr: quantity
+        description: "Total purchased quantity across item lines. Use when users ask how many units were bought."
+
+      - name: item_total_spend_measure
+        agg: sum
+        expr: gross_amount
+        description: "Total gross item-level spend before order-level fees, delivery charges, discounts, tips, and refunds."
+
+      - name: item_net_spend_measure
+        agg: sum
+        expr: net_amount
+        description: "Total net item-level spend where net amount is available from the extracted source document."
+
+      - name: item_tax_amount_measure
+        agg: sum
+        expr: tax_amount
+        description: "Total tax amount associated with item lines where available."
+
+metrics:
+  - name: item_count
+    label: "Item Count"
+    description: "Number of item/product lines purchased. Use when users ask how many items, products, groceries, dishes, drinks, or modifiers they bought."
+    type: simple
+    type_params:
+      measure: item_count_measure
+
+  - name: item_quantity
+    label: "Item Quantity"
+    description: "Total purchased item quantity. Use when users ask how many units or quantities they bought."
+    type: simple
+    type_params:
+      measure: item_quantity_measure
+
+  - name: item_total_spend
+    label: "Item Total Spend"
+    description: "Total money spent on item/product lines, excluding order-level fees, delivery charges, tips, discounts, and refunds. Use for product spend, item spend, grocery item spend, alcohol item spend, and top item analysis."
+    type: simple
+    type_params:
+      measure: item_total_spend_measure
+
+  - name: item_net_spend
+    label: "Item Net Spend"
+    description: "Total net spend on item/product lines where net amount is available."
+    type: simple
+    type_params:
+      measure: item_net_spend_measure
+
+  - name: item_tax_amount
+    label: "Item Tax Amount"
+    description: "Total tax amount for item/product lines where available."
+    type: simple
+    type_params:
+      measure: item_tax_amount_measure
+
+  - name: average_item_price
+    label: "Average Item Price"
+    description: "Average item line price, calculated as item total spend divided by item count. Use when users ask about average product price, average item price, or typical item cost."
+    type: ratio
+    type_params:
+      numerator: item_total_spend
+      denominator: item_count
